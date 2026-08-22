@@ -103,7 +103,7 @@ Food_Delivery_Dispatch_DS_Project_Scaffold/
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/hemanshutriventure/QuickBite-Food-Delivery-Dispatch.git
+git clone https://github.com/singhriyaanand659-web/QuickBite-Food-Delivery-Dispatch.git
 cd QuickBite-Food-Delivery-Dispatch
 ```
 
