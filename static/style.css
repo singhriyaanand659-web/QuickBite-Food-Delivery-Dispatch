@@ -1108,40 +1108,8 @@ body {
 }
 
 
-/* ============================================================
-   FOOTER
-============================================================ */
+/* Legacy footer cleanup - handled by qb-global-footer */
 
-.site-footer {
-    padding: 35px 5%;
-
-    background: #111;
-
-    color: white;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 25px;
-}
-
-.footer-logo {
-    font-size: 18px;
-
-    font-weight: 900;
-}
-
-.site-footer p,
-.site-footer span {
-    color: #888;
-
-    font-size: 11px;
-}
-
-.site-footer span {
-    margin-left: auto;
-}
 
 
 /* ============================================================
@@ -1844,219 +1812,216 @@ main, .page, .page-container, .auth-page-wrapper, .tracking-container, .profile-
 }
 
 /* ============================================================
-   UNIFIED GLOBAL FOOTER
+   ONE SHARED RESPONSIVE GLOBAL FOOTER
 ============================================================ */
 .qb-global-footer,
-.qb-footer {
-    margin-top: auto;
-    background: #0f172a;
-    color: #94a3b8;
-    border-top: 1px solid #1e293b;
-    padding: 50px 6% 30px;
-    font-size: 14px;
-    width: 100%;
+.qb-footer,
+.site-footer {
+    margin-top: auto !important;
+    background: #0f172a !important;
+    color: #94a3b8 !important;
+    border-top: 1px solid #1e293b !important;
+    padding: 48px 6% 28px !important;
+    font-size: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
 }
 
 .qb-footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1.8fr 1fr 1fr 1.2fr;
-    gap: 36px;
+    width: 100% !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    grid-template-columns: 1.8fr 1fr 1fr 1.2fr !important;
+    gap: 36px !important;
+    box-sizing: border-box !important;
 }
 
 .qb-footer-col {
-    display: flex;
-    flex-direction: column;
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
 }
 
 .qb-footer-logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: #ffffff;
-    font-size: 22px;
-    font-weight: 900;
-    letter-spacing: -0.6px;
-    margin-bottom: 12px;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    text-decoration: none !important;
+    color: #ffffff !important;
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.6px !important;
+    margin-bottom: 12px !important;
 }
 
 .qb-footer-logo-badge {
-    width: 32px;
-    height: 32px;
-    background: linear-gradient(135deg, #ff5a1f, #ff8a4c);
-    border-radius: 10px;
-    display: grid;
-    place-items: center;
-    color: white;
-    font-size: 16px;
+    width: 32px !important;
+    height: 32px !important;
+    background: linear-gradient(135deg, #ff5a1f, #ff8a4c) !important;
+    border-radius: 10px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: white !important;
+    font-size: 16px !important;
 }
 
 .qb-footer-tagline,
 .qb-footer-col p {
-    font-size: 13px;
-    line-height: 1.6;
-    color: #94a3b8;
-    margin: 0 0 16px;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    color: #94a3b8 !important;
+    margin: 0 0 16px !important;
 }
 
 .qb-footer-heading,
 .qb-footer-col h4 {
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 800;
-    margin: 0 0 16px;
-    letter-spacing: -0.3px;
+    color: #ffffff !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    margin: 0 0 16px !important;
+    letter-spacing: -0.3px !important;
 }
 
 .qb-footer-links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
 }
 
 .qb-footer-links a {
-    color: #94a3b8;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    transition: all 0.2s ease;
+    color: #94a3b8 !important;
+    text-decoration: none !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
 }
 
 .qb-footer-links a:hover {
-    color: #ff5a1f;
-    padding-left: 3px;
+    color: #ff5a1f !important;
+    padding-left: 3px !important;
 }
 
 .qb-footer-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: #1e293b;
-    color: #38bdf8;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    width: fit-content;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    background: #1e293b !important;
+    color: #38bdf8 !important;
+    padding: 6px 14px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    width: fit-content !important;
 }
 
 .status-indicator-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #10b981;
-    box-shadow: 0 0 8px #10b981;
+    width: 7px !important;
+    height: 7px !important;
+    border-radius: 50% !important;
+    background: #10b981 !important;
+    box-shadow: 0 0 8px #10b981 !important;
 }
 
 .qb-footer-bottom {
-    max-width: 1200px;
-    margin: 40px auto 0;
-    padding-top: 24px;
-    border-top: 1px solid #1e293b;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 12px;
-    color: #64748b;
-    flex-wrap: wrap;
-    gap: 12px;
+    width: 100% !important;
+    max-width: 1200px !important;
+    margin: 36px auto 0 !important;
+    padding-top: 20px !important;
+    border-top: 1px solid #1e293b !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    font-size: 12px !important;
+    color: #64748b !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    box-sizing: border-box !important;
 }
 
 @media (max-width: 900px) {
     .qb-footer-container {
-        grid-template-columns: 1fr 1fr;
-        gap: 28px;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 28px !important;
     }
 }
 
-@media (max-width: 540px) {
+@media (max-width: 560px) {
+    .qb-global-footer,
+    .qb-footer,
+    .site-footer {
+        padding: 36px 5% 24px !important;
+    }
     .qb-footer-container {
-        grid-template-columns: 1fr;
-        gap: 24px;
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
     }
     .qb-footer-bottom {
-        flex-direction: column;
-        text-align: center;
-        gap: 8px;
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 8px !important;
     }
 }
 
 /* ============================================================
-   GLOBAL FLOATING WHATSAPP BUTTON (SMALL FIXED BOTTOM-RIGHT)
+   ONE SHARED GLOBAL CIRCULAR WHATSAPP BUTTON (52px max)
 ============================================================ */
 .qb-whatsapp-float,
 .floating-whatsapp-btn {
     position: fixed !important;
-    bottom: 22px !important;
-    right: 22px !important;
-    z-index: 999999 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    width: 52px !important;
+    height: 52px !important;
+    max-width: 56px !important;
+    max-height: 56px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+    border-radius: 50% !important;
     background: #25D366 !important;
-    color: #ffffff !important;
-    padding: 10px 18px !important;
-    border-radius: 50px !important;
+    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4), 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 9999 !important;
     text-decoration: none !important;
-    font-weight: 800 !important;
-    font-size: 13px !important;
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4) !important;
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
     cursor: pointer !important;
-    width: auto !important;
-    height: auto !important;
-    max-width: fit-content !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 .qb-whatsapp-float:hover,
 .floating-whatsapp-btn:hover {
-    transform: translateY(-3px) scale(1.03) !important;
-    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.55) !important;
-    color: #ffffff !important;
+    transform: scale(1.08) !important;
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.55), 0 3px 8px rgba(0, 0, 0, 0.2) !important;
+    background: #20ba59 !important;
 }
 
 .qb-whatsapp-svg,
 .floating-whatsapp-btn svg {
-    width: 20px !important;
-    height: 20px !important;
-    min-width: 20px !important;
-    min-height: 20px !important;
-    max-width: 20px !important;
-    max-height: 20px !important;
+    width: 28px !important;
+    height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
     fill: #ffffff !important;
-    display: inline-block !important;
+    display: block !important;
     flex-shrink: 0 !important;
 }
 
 .qb-whatsapp-text,
 .floating-whatsapp-btn span {
-    color: #ffffff !important;
-    font-size: 13px !important;
-    font-weight: 800 !important;
-    line-height: 1 !important;
+    display: none !important;
 }
 
-@media (max-width: 480px) {
-    .qb-whatsapp-float,
-    .floating-whatsapp-btn {
-        padding: 12px !important;
-        border-radius: 50% !important;
-        bottom: 16px !important;
-        right: 16px !important;
-        width: 46px !important;
-        height: 46px !important;
-        justify-content: center !important;
-    }
-    .qb-whatsapp-text,
-    .floating-whatsapp-btn span {
-        display: none !important;
-    }
-}
 
 /* ============================================================
    STATUS BADGES & TIMELINES
