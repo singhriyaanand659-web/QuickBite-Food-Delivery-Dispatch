@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.name }} — QuickBite Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --orange: #ff5a1f;
+            --orange-dark: #e84d16;
+            --orange-glow: rgba(255, 90, 31, 0.3);
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --green: #10b981;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .profile-nav {
+            height: 72px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .brand-logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: #0f172a;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.8px;
+        }
+        .brand-badge {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #ff5a1f, #ff8a4c);
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            color: white;
+            font-size: 20px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #475569;
+            font-weight: 700;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .nav-links a:hover { color: var(--orange); }
+
+        .profile-page-container {
+            width: min(1100px, 92%);
+            margin: 36px auto 80px;
+            flex: 1;
+        }
+
+        /* Hero Banner */
+        .profile-hero-banner {
+            background: linear-gradient(135deg, #090d16 0%, #1e1b4b 60%, #0f172a 100%);
+            border-radius: 28px;
+            padding: 40px 36px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+            margin-bottom: 32px;
+        }
+        .hero-glow-blob {
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 90, 31, 0.25) 0%, rgba(255, 90, 31, 0) 70%);
+            pointer-events: none;
+        }
+        .hero-content-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 24px;
+            position: relative;
+            z-index: 2;
+        }
+        .user-identity {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        .avatar-glow-wrapper {
+            position: relative;
+        }
+        .avatar-display-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #fff8f5;
+            display: grid;
+            place-items: center;
+            font-size: 46px;
+            box-shadow: 0 0 0 4px rgba(255, 90, 31, 0.4), 0 10px 25px rgba(0,0,0,0.3);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .avatar-display-circle:hover { transform: scale(1.08) rotate(5deg); }
+        .user-details h1 {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+        .user-details p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .user-badges-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .hero-badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #e2e8f0;
+        }
+        .hero-badge-pill.verified {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.4);
+            color: #34d399;
+        }
+
+        /* 4 Stat Cards */
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 30px;
+            position: relative;
+            z-index: 2;
+        }
+        .stat-metric-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 16px 20px;
+            transition: all 0.2s ease;
+        }
+        .stat-metric-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        .stat-metric-card strong {
+            display: block;
+            font-size: 22px;
+            font-weight: 900;
+            color: #fb923c;
+            margin-bottom: 2px;
+        }
+        .stat-metric-card span {
+            font-size: 11px;
+            font-weight: 800;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        /* Main Profile Layout */
+        .profile-main-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        /* Profile Cards */
+        .content-card {
+            background: white;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            padding: 34px;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.02);
+            margin-bottom: 24px;
+        }
+        .content-card h2 {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Avatar Studio */
+        .avatar-studio-box {
+            background: #fff8f5;
+            border: 1.5px dashed #fed7aa;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .avatar-studio-label {
+            font-size: 12px;
+            font-weight: 800;
+            color: #c2410c;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .avatar-options-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .avatar-btn-choice {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #e2e8f0;
+            display: grid;
+            place-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .avatar-btn-choice:hover {
+            transform: scale(1.15);
+            border-color: var(--orange);
+        }
+        .avatar-btn-choice.selected {
+            border-color: var(--orange);
+            background: #ffedd5;
+            box-shadow: 0 0 0 4px var(--orange-glow);
+            transform: scale(1.1);
+        }
+
+        /* Forms */
+        .form-row-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .field-group {
+            margin-bottom: 16px;
+        }
+        .field-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            color: #475569;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        .field-input {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            background: #f8fafc;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .field-input:focus {
+            background: white;
+            border-color: var(--orange);
+            box-shadow: 0 0 0 4px rgba(255, 90, 31, 0.12);
+        }
+
+        .btn-save-profile {
+            background: linear-gradient(135deg, #ff5a1f, #ff4300);
+            color: white;
+            border: none;
+            padding: 15px 32px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 20px var(--orange-glow);
+        }
+        .btn-save-profile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(255, 90, 31, 0.45);
+        }
+
+        /* Sidebar Cards */
+        .sidebar-action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .sidebar-link-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            text-decoration: none;
+            color: #1e293b;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .sidebar-link-btn:hover {
+            background: white;
+            border-color: var(--orange);
+            color: var(--orange);
+            transform: translateX(4px);
+        }
+        .btn-logout-sidebar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px;
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 14px;
+            text-decoration: none;
+            margin-top: 14px;
+            transition: 0.2s;
+        }
+        .btn-logout-sidebar:hover { background: #fee2e2; }
+
+        /* Toast */
+        .toast-notification {
+            position: fixed;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%) translateY(120px);
+            background: #0f172a;
+            color: white;
+            padding: 15px 28px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 800;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 9999999;
+        }
+        .toast-notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 900px) {
+            .profile-stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .profile-main-layout { grid-template-columns: 1fr; }
+            .form-row-2col { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="profile-nav">
+        <a href="/" class="brand-logo">
+            <div class="brand-badge">⚡</div>
+            <span>QuickBite</span>
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/orders">My Orders</a>
+            <a href="/cart">Cart</a>
+            <a href="/faq">FAQ</a>
+            <a href="/help">Help</a>
+            <div class="user-nav-wrapper">
+                <button class="user-avatar-btn" onclick="toggleUserDropdown(event)">
+                    <span>{{ user.avatar or '👨‍💼' }}</span>
+                    <span>{{ user.name.split(' ')[0] }}</span>
+                    <span style="font-size:10px; color:#94a3b8;">▼</span>
+                </button>
+                <div id="userDropdownMenu" class="user-dropdown-menu">
+                    <div class="user-dropdown-header">
+                        <strong>{{ user.name }}</strong>
+                        <span>{{ user.email }}</span>
+                    </div>
+                    <a href="/profile" class="user-dropdown-link">👤 My Profile</a>
+                    <a href="/orders" class="user-dropdown-link">📦 My Orders</a>
+                    <a href="/cart" class="user-dropdown-link">🛒 View Cart</a>
+                    <a href="/logout" class="user-dropdown-link logout">🚪 Log Out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="profile-page-container">
+        <!-- HERO BANNER -->
+        <div class="profile-hero-banner">
+            <div class="hero-glow-blob"></div>
+            <div class="hero-content-row">
+                <div class="user-identity">
+                    <div class="avatar-glow-wrapper">
+                        <div class="avatar-display-circle" id="heroAvatarDisplay">
+                            {{ user.avatar or '👨‍💼' }}
+                        </div>
+                    </div>
+                    <div class="user-details">
+                        <h1 id="heroNameDisplay">{{ user.name }}</h1>
+                        <p>{{ user.email }} • Member since {{ user.created_at or '2026' }}</p>
+                        <div class="user-badges-row">
+                            <span class="hero-badge-pill verified">✓ Verified Foodie</span>
+                            <span class="hero-badge-pill">⚡ Dijkstra Routing Priority</span>
+                            <span class="hero-badge-pill">📍 {{ user.city or 'Dadar' }} Hub</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="profile-stats-grid">
+                <div class="stat-metric-card">
+                    <strong>{{ orders_count }}</strong>
+                    <span>Total Orders</span>
+                </div>
+                <div class="stat-metric-card">
+                    <strong>{{ user.city or 'Dadar' }}</strong>
+                    <span>Graph Node</span>
+                </div>
+                <div class="stat-metric-card">
+                    <strong>14.2 min</strong>
+                    <span>Avg Dispatch ETA</span>
+                </div>
+                <div class="stat-metric-card">
+                    <strong>₹180</strong>
+                    <span>Fees Saved</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="profile-main-layout">
+            <div class="content-card">
+                <h2><span>✏️</span> Edit Personal Details</h2>
+
+                <form id="profileEditForm" onsubmit="event.preventDefault(); submitProfileUpdate();">
+                    <!-- AVATAR STUDIO -->
+                    <div class="avatar-studio-box">
+                        <span class="avatar-studio-label">🎨 Choose Profile Avatar</span>
+                        <div class="avatar-options-row">
+                            {% for av in ['👨‍💼', '👩‍🍳', '🧑‍💻', '🍕', '🍔', '🍜', '🚴', '🤠', '🌟', '🧁', '🥑', '🚀'] %}
+                                <button type="button" class="avatar-btn-choice {{ 'selected' if user.avatar == av else '' }}" onclick="pickAvatar('{{ av }}', this)">
+                                    {{ av }}
+                                </button>
+                            {% endfor %}
+                        </div>
+                        <input type="hidden" id="chosenAvatar" value="{{ user.avatar or '👨‍💼' }}">
+                    </div>
+
+                    <div class="form-row-2col">
+                        <div class="field-group">
+                            <label>Full Name</label>
+                            <input type="text" id="profName" class="field-input" value="{{ user.name }}" required>
+                        </div>
+                        <div class="field-group">
+                            <label>Email Address (Account ID)</label>
+                            <input type="email" class="field-input" value="{{ user.email }}" disabled style="background:#f1f5f9; cursor:not-allowed;">
+                        </div>
+                    </div>
+
+                    <div class="form-row-2col">
+                        <div class="field-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="profPhone" class="field-input" value="{{ user.phone }}" required>
+                        </div>
+                        <div class="field-group">
+                            <label>Date of Birth</label>
+                            <input type="date" id="profDob" class="field-input" value="{{ user.dob or '1998-05-14' }}">
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label>Primary Delivery Street Address</label>
+                        <textarea id="profAddress" class="field-input" rows="3" required>{{ user.address or 'Flat 402, Sea View Apartments, Shivaji Park, Dadar West' }}</textarea>
+                    </div>
+
+                    <div class="form-row-2col">
+                        <div class="field-group">
+                            <label>City Location Node (For Dijkstra Routing)</label>
+                            <select id="profCity" class="field-input" required>
+                                {% for node in ['Bandra', 'Dadar', 'Andheri', 'Kurla', 'BKC', 'Ghatkopar', 'Powai', 'Goregaon', 'Thane'] %}
+                                    <option value="{{ node }}" {{ 'selected' if (user.city or 'Dadar') == node else '' }}>{{ node }} Vertex</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label>Postal Pincode</label>
+                            <input type="text" id="profPincode" class="field-input" value="{{ user.pincode or '400028' }}" maxlength="6" required>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:24px;">
+                        <button type="submit" class="btn-save-profile" id="btnSaveProf">
+                            <span>Save Profile Changes ✨</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- SIDEBAR -->
+            <div>
+                <div class="content-card">
+                    <h2><span>🚀</span> Quick Actions</h2>
+                    <div class="sidebar-action-list">
+                        <a href="/orders" class="sidebar-link-btn">
+                            <span>📦 View My Orders</span>
+                            <span>→</span>
+                        </a>
+                        <a href="/cart" class="sidebar-link-btn">
+                            <span>🛒 View Cart</span>
+                            <span>→</span>
+                        </a>
+                        <a href="/refunds" class="sidebar-link-btn">
+                            <span>💰 Track Refunds</span>
+                            <span>→</span>
+                        </a>
+                        <a href="/help" class="sidebar-link-btn">
+                            <span>🆘 Help & Support Desk</span>
+                            <span>→</span>
+                        </a>
+                    </div>
+
+                    <a href="/logout" class="btn-logout-sidebar">
+                        <span>🚪 Log Out of QuickBite</span>
+                    </a>
+                </div>
+
+                <div class="content-card" style="background:#fff8f5; border-color:#ffd9c8;">
+                    <h3 style="font-size:15px; font-weight:900; color:#c2410c; margin-bottom:8px;">💡 Smart Dispatch Feature</h3>
+                    <p style="font-size:13px; color:#9a3412; line-height:1.6;">
+                        Your default city location vertex (<strong>{{ user.city or 'Dadar' }}</strong>) enables QuickBite's Dijkstra algorithm to match nearest riders and calculate shortest delivery paths instantly at checkout!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast-notification" id="profToast">
+        <span>🎉</span> Profile updated and saved successfully!
+    </div>
+
+    <!-- FLOATING WHATSAPP -->
+    <a href="https://wa.me/{{ whatsapp_number }}?text=Hi%20QuickBite%20Support,%20I%20have%20a%20question%20about%20my%20profile." target="_blank" class="floating-whatsapp-btn" title="Chat with QuickBite Support on WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+        <span>WhatsApp Support</span>
+    </a>
+
+    <!-- UNIVERSAL FOOTER -->
+    <footer class="qb-footer">
+        <div class="qb-footer-container">
+            <div class="qb-footer-col">
+                <h4>QuickBite Dispatch</h4>
+                <p>High-performance graph-based food delivery dispatch engine powered by Dijkstra shortest path routing and Min-Heap priority rider matching.</p>
+                <div class="qb-footer-badge">🟢 Dispatch Engine Active</div>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Navigation</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/orders">My Orders</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/checkout">Checkout</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Customer Care</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/help">Help & Support</a></li>
+                    <li><a href="/refunds">Refund Status</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Policies</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/refund-policy">Refund & Cancellation Policy</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="qb-footer-bottom">
+            <div>© {{ current_year }} QuickBite Technologies Inc. All rights reserved.</div>
+            <div>Dijkstra Shortest Path Dispatch • Min-Heap Rider Allocation</div>
+        </div>
+    </footer>
+
+    <script>
+        function pickAvatar(av, btn) {
+            document.querySelectorAll('.avatar-btn-choice').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            document.getElementById('chosenAvatar').value = av;
+            document.getElementById('heroAvatarDisplay').innerText = av;
+        }
+
+        async function submitProfileUpdate() {
+            const name = document.getElementById('profName').value.trim();
+            const phone = document.getElementById('profPhone').value.trim();
+            const dob = document.getElementById('profDob').value;
+            const address = document.getElementById('profAddress').value.trim();
+            const city = document.getElementById('profCity').value;
+            const pincode = document.getElementById('profPincode').value.trim();
+            const avatar = document.getElementById('chosenAvatar').value;
+
+            const btn = document.getElementById('btnSaveProf');
+            btn.disabled = true;
+            btn.innerHTML = '<span>Saving... ⏳</span>';
+
+            try {
+                const res = await fetch("/api/profile", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, phone, dob, address, city, pincode, avatar })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.message || "Failed to update profile.");
+
+                document.getElementById('heroNameDisplay').innerText = name;
+
+                btn.disabled = false;
+                btn.innerHTML = '<span>Save Profile Changes ✨</span>';
+
+                const toast = document.getElementById('profToast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2600);
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Save Profile Changes ✨</span>';
+                alert("Profile Update Error: " + err.message);
+            }
+        }
+
+        function toggleUserDropdown(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.toggle('show');
+        }
+        window.addEventListener('click', function() {
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.remove('show');
+        });
+    </script>
+</body>
+</html>

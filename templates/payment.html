@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment — QuickBite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --orange: #ff5a1f;
+            --orange-dark: #e84d16;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --green: #10b981;
+            --green-dark: #059669;
+            --blue: #3b82f6;
+        }
+        body {
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .navbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--orange);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--green-dark);
+            background: #ecfdf5;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid #a7f3d0;
+        }
+        .page {
+            width: min(1100px, 92%);
+            margin: 35px auto 80px;
+        }
+        .steps-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 35px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+        }
+        .step-item.active {
+            color: var(--orange);
+        }
+        .step-item.completed {
+            color: var(--green-dark);
+        }
+        .step-circle {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 12px;
+        }
+        .step-item.active .step-circle {
+            background: var(--orange);
+            color: white;
+        }
+        .step-item.completed .step-circle {
+            background: var(--green);
+            color: white;
+        }
+        .step-divider {
+            width: 40px;
+            height: 2px;
+            background: #cbd5e1;
+        }
+        .layout {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 26px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .payment-option {
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 18px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .payment-option:hover {
+            border-color: #cbd5e1;
+            background: #fafafa;
+        }
+        .payment-option.selected {
+            border-color: var(--orange);
+            background: #fff8f5;
+        }
+        .option-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .option-radio {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 700;
+            font-size: 15px;
+        }
+        .option-radio input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--orange);
+            cursor: pointer;
+        }
+        .option-badge {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .option-content {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed #e2e8f0;
+            display: none;
+        }
+        .payment-option.selected .option-content {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .upi-apps {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .upi-app-btn {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .upi-app-btn:hover, .upi-app-btn.active {
+            border-color: var(--orange);
+            background: #fff5f0;
+            color: var(--orange);
+        }
+        .qr-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 10px;
+        }
+        .qr-placeholder {
+            width: 75px;
+            height: 75px;
+            background: #1e293b;
+            border-radius: 6px;
+            display: grid;
+            place-items: center;
+            color: white;
+            font-size: 26px;
+        }
+        .btn-pay {
+            width: 100%;
+            padding: 16px;
+            background: var(--orange);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 16px rgba(255, 90, 31, 0.25);
+            margin-top: 20px;
+        }
+        .btn-pay:hover {
+            background: var(--orange-dark);
+            transform: translateY(-1px);
+        }
+        .btn-pay:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: #475569;
+        }
+        .summary-item.total {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--text);
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            margin-top: 14px;
+        }
+        .deliver-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 18px;
+            font-size: 13px;
+        }
+        .deliver-box strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--text);
+            font-size: 14px;
+        }
+        .deliver-box span {
+            color: var(--muted);
+        }
+        .cart-preview-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 8px 0;
+            border-bottom: 1px dashed #f1f5f9;
+        }
+        /* MODAL */
+        .pay-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .pay-modal.active { display: flex; }
+        .pay-modal-box {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 30px;
+            width: min(440px, 95%);
+            text-align: center;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+            animation: zoomIn 0.25s ease;
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e2e8f0;
+            border-top-color: var(--orange);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .pay-status-steps {
+            text-align: left;
+            margin: 20px 0;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .pay-status-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #64748b;
+        }
+        .pay-status-row.done { color: var(--green-dark); font-weight: 700; }
+        .pay-status-row.active { color: var(--orange); font-weight: 700; }
+        @media (max-width: 850px) {
+            .layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="/" class="logo">
+            <span>🍕</span> QuickBite
+        </a>
+        <div class="secure-badge">
+            🔒 256-Bit SSL Demo Gateway
+        </div>
+    </header>
+
+    <main class="page">
+        <div class="steps-bar">
+            <div class="step-item completed">
+                <div class="step-circle">✓</div>
+                <span>Cart</span>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-item completed">
+                <div class="step-circle">✓</div>
+                <span>Checkout</span>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-item active">
+                <div class="step-circle">3</div>
+                <span>Payment</span>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-item">
+                <div class="step-circle">4</div>
+                <span>Track Order</span>
+            </div>
+        </div>
+
+        <div class="layout">
+            <!-- PAYMENT OPTIONS -->
+            <div>
+                <div class="card">
+                    <div class="card-title">
+                        <span>💳</span> Select Payment Method
+                    </div>
+
+                    <div class="payment-methods">
+                        <!-- UPI -->
+                        <div class="payment-option selected" id="opt-upi" onclick="selectMethod('upi')">
+                            <div class="option-header">
+                                <label class="option-radio">
+                                    <input type="radio" name="payment_method" value="upi" checked>
+                                    <span>UPI (Instant & Zero Fee)</span>
+                                </label>
+                                <span class="option-badge" style="background:#ecfdf5; color:#059669;">RECOMMENDED</span>
+                            </div>
+                            <div class="option-content">
+                                <div class="upi-apps">
+                                    <button type="button" class="upi-app-btn active" onclick="setUpiApp('Google Pay', '@okhdfcbank')">Google Pay</button>
+                                    <button type="button" class="upi-app-btn" onclick="setUpiApp('PhonePe', '@ybl')">PhonePe</button>
+                                    <button type="button" class="upi-app-btn" onclick="setUpiApp('Paytm', '@paytm')">Paytm</button>
+                                    <button type="button" class="upi-app-btn" onclick="setUpiApp('BHIM', '@upi')">BHIM</button>
+                                </div>
+                                <div class="form-group">
+                                    <label>UPI ID / VPA</label>
+                                    <input type="text" id="upiId" class="form-input" placeholder="e.g. yourname@okhdfcbank" value="customer@okhdfcbank">
+                                    <small style="color:var(--muted); font-size:11px; margin-top:4px; display:block;">Enter any realistic UPI ID with @ symbol.</small>
+                                </div>
+                                <div class="qr-box">
+                                    <div class="qr-placeholder">📱</div>
+                                    <div>
+                                        <strong style="font-size:13px; display:block;">Scan & Pay with Any UPI App</strong>
+                                        <span style="font-size:11px; color:var(--muted);">Simulated dynamic QR code for instant demo authorization.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARDS -->
+                        <div class="payment-option" id="opt-card" onclick="selectMethod('card')">
+                            <div class="option-header">
+                                <label class="option-radio">
+                                    <input type="radio" name="payment_method" value="card">
+                                    <span>Credit / Debit Card</span>
+                                </label>
+                                <span class="option-badge">VISA / MASTERCARD / RUPAY</span>
+                            </div>
+                            <div class="option-content">
+                                <div class="form-group">
+                                    <label>Card Number</label>
+                                    <input type="text" id="cardNumber" class="form-input" placeholder="4532 0123 4567 8910" maxlength="19" value="4532 8821 9043 4242" oninput="formatCardNumber(this)">
+                                </div>
+                                <div class="form-group">
+                                    <label>Cardholder Name</label>
+                                    <input type="text" id="cardHolder" class="form-input" placeholder="Name on card" value="Rahul Sharma">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Expiry (MM/YY)</label>
+                                        <input type="text" id="cardExpiry" class="form-input" placeholder="12/28" maxlength="5" value="09/28" oninput="formatExpiry(this)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>CVV / CVC</label>
+                                        <input type="password" id="cardCvv" class="form-input" placeholder="123" maxlength="4" value="888">
+                                    </div>
+                                </div>
+                                <div style="font-size:11px; color:var(--muted);">🔒 Demo test mode: No real charges are processed.</div>
+                            </div>
+                        </div>
+
+                        <!-- COD -->
+                        <div class="payment-option" id="opt-cod" onclick="selectMethod('cod')">
+                            <div class="option-header">
+                                <label class="option-radio">
+                                    <input type="radio" name="payment_method" value="cod">
+                                    <span>Cash on Delivery (COD)</span>
+                                </label>
+                                <span class="option-badge">PAY ON ARRIVAL</span>
+                            </div>
+                            <div class="option-content">
+                                <p style="font-size:13px; color:#475569; line-height:1.5;">
+                                    💵 Pay in cash or scan rider's QR upon food delivery at your doorstep. Please keep exact change ready.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-pay" id="payButton" onclick="processPayment()">
+                        <span>Pay ₹<span id="btnAmount">0</span> Securely 🚀</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ORDER SUMMARY -->
+            <div>
+                <div class="card">
+                    <div class="card-title">
+                        <span>📦</span> Order Details
+                    </div>
+
+                    <div class="deliver-box">
+                        <strong id="deliverName">Guest Customer</strong>
+                        <span id="deliverAddress">Bandra, Mumbai</span>
+                        <div style="margin-top:6px; font-size:12px; color:var(--orange); font-weight:700;">
+                            📍 Delivery Node: <span id="deliverNode">Bandra</span>
+                        </div>
+                    </div>
+
+                    <div id="cartItemsList" style="margin-bottom:15px;">
+                        <!-- Injected by JS -->
+                    </div>
+
+                    <div class="summary-item">
+                        <span>Item Subtotal</span>
+                        <span>₹<span id="subtotalVal">0</span></span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Delivery Fee</span>
+                        <span>₹5</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Platform & Handling Fee</span>
+                        <span>₹2</span>
+                    </div>
+                    <div class="summary-item total">
+                        <span>Total Payable</span>
+                        <span style="color:var(--orange);">₹<span id="totalPayable">0</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PROCESSING MODAL -->
+    <div class="pay-modal" id="payModal">
+        <div class="pay-modal-box">
+            <div class="spinner" id="modalSpinner"></div>
+            <h3 id="modalTitle" style="font-size:20px; font-weight:900; margin-bottom:8px;">Processing Payment</h3>
+            <p id="modalDesc" style="color:var(--muted); font-size:13px;">Please do not refresh or close this window.</p>
+
+            <div class="pay-status-steps">
+                <div class="pay-status-row active" id="step1">
+                    <span>⚡</span> <span>1. Validating payment credentials...</span>
+                </div>
+                <div class="pay-status-row" id="step2">
+                    <span>🏦</span> <span>2. Authorizing with bank gateway...</span>
+                </div>
+                <div class="pay-status-row" id="step3">
+                    <span>🚴</span> <span>3. Dispatching order via Min-Heap & Dijkstra...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING WHATSAPP -->
+    <a href="https://wa.me/{{ whatsapp_number }}?text=Hi%20QuickBite%20Support,%20I%20have%20a%20question%20about%20my%20payment." target="_blank" class="floating-whatsapp-btn" title="Chat with QuickBite Support on WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+        <span>WhatsApp Support</span>
+    </a>
+
+    <!-- UNIVERSAL FOOTER -->
+    <footer class="qb-footer">
+        <div class="qb-footer-container">
+            <div class="qb-footer-col">
+                <h4>QuickBite Dispatch</h4>
+                <p>High-performance graph-based food delivery dispatch engine powered by Dijkstra shortest path routing and Min-Heap priority rider matching.</p>
+                <div class="qb-footer-badge">🟢 Dispatch Engine Active</div>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Navigation</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/orders">My Orders</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/checkout">Checkout</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Customer Care</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/help">Help & Support</a></li>
+                    <li><a href="/refunds">Refund Status</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Policies</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/refund-policy">Refund & Cancellation Policy</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="qb-footer-bottom">
+            <div>© {{ current_year }} QuickBite Technologies Inc. All rights reserved.</div>
+            <div>Dijkstra Shortest Path Dispatch • Min-Heap Rider Allocation</div>
+        </div>
+    </footer>
+
+    <script>
+        let currentMethod = 'upi';
+        let cart = JSON.parse(localStorage.getItem("quickbite_cart")) || [];
+        let checkoutInfo = JSON.parse(localStorage.getItem("quickbite_checkout")) || {
+            customer_name: "Rahul Sharma",
+            customer_location: "Bandra",
+            address: "12A, Hill Road, Bandra West",
+            phone: "9876543210",
+            notes: ""
+        };
+
+        function selectMethod(method) {
+            currentMethod = method;
+            document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
+            document.getElementById('opt-' + method).classList.add('selected');
+            document.querySelector(`input[name="payment_method"][value="${method}"]`).checked = true;
+            updatePayButton();
+        }
+
+        function setUpiApp(appName, suffix) {
+            document.querySelectorAll('.upi-app-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            const name = (checkoutInfo.customer_name || 'user').toLowerCase().replace(/\s+/g, '');
+            document.getElementById('upiId').value = `${name}${suffix}`;
+        }
+
+        function formatCardNumber(input) {
+            let val = input.value.replace(/\D/g, '').substring(0, 16);
+            input.value = val.match(/.{1,4}/g)?.join(' ') || val;
+        }
+
+        function formatExpiry(input) {
+            let val = input.value.replace(/\D/g, '').substring(0, 4);
+            if (val.length >= 3) {
+                input.value = val.substring(0, 2) + '/' + val.substring(2, 4);
+            } else {
+                input.value = val;
+            }
+        }
+
+        function calculateTotals() {
+            let subtotal = 0;
+            cart.forEach(item => {
+                subtotal += (Number(item.price) || 0) * (Number(item.quantity) || 1);
+            });
+            const deliveryFee = 5;
+            const platformFee = 2;
+            const total = subtotal > 0 ? (subtotal + deliveryFee + platformFee) : 0;
+            return { subtotal, total };
+        }
+
+        function renderSummary() {
+            const { subtotal, total } = calculateTotals();
+            document.getElementById('subtotalVal').innerText = subtotal;
+            document.getElementById('totalPayable').innerText = total;
+            document.getElementById('btnAmount').innerText = total;
+
+            document.getElementById('deliverName').innerText = checkoutInfo.customer_name || "Guest Customer";
+            document.getElementById('deliverAddress').innerText = checkoutInfo.address || "Mumbai";
+            document.getElementById('deliverNode').innerText = checkoutInfo.customer_location || "Bandra";
+
+            const container = document.getElementById('cartItemsList');
+            if (cart.length === 0) {
+                container.innerHTML = `<div style="color:var(--muted); font-size:13px;">No items in cart.</div>`;
+                return;
+            }
+            container.innerHTML = cart.map(item => `
+                <div class="cart-preview-item">
+                    <span>${item.name} × ${item.quantity}</span>
+                    <strong>₹${(item.price * item.quantity)}</strong>
+                </div>
+            `).join('');
+            updatePayButton();
+        }
+
+        function updatePayButton() {
+            const { total } = calculateTotals();
+            const btn = document.getElementById('payButton');
+            if (currentMethod === 'cod') {
+                btn.innerHTML = `<span>Place Order with Cash on Delivery (₹${total}) 💵</span>`;
+            } else if (currentMethod === 'upi') {
+                btn.innerHTML = `<span>Verify & Pay ₹${total} via UPI ⚡</span>`;
+            } else {
+                btn.innerHTML = `<span>Pay ₹${total} Securely with Card 💳</span>`;
+            }
+        }
+
+        async function processPayment() {
+            const { total } = calculateTotals();
+            if (cart.length === 0) {
+                alert("Your cart is empty! Please add items before paying.");
+                window.location.href = "/";
+                return;
+            }
+
+            // Demo Validation
+            let paymentDetails = "";
+            if (currentMethod === 'upi') {
+                const upiVal = document.getElementById('upiId').value.trim();
+                if (!upiVal || !upiVal.includes('@')) {
+                    alert("Please enter a valid UPI ID (e.g. username@bank)");
+                    return;
+                }
+                paymentDetails = `UPI ID: ${upiVal}`;
+            } else if (currentMethod === 'card') {
+                const cardNum = document.getElementById('cardNumber').value.replace(/\s+/g, '');
+                const cardHolder = document.getElementById('cardHolder').value.trim();
+                const expiry = document.getElementById('cardExpiry').value.trim();
+                const cvv = document.getElementById('cardCvv').value.trim();
+
+                if (cardNum.length < 15) {
+                    alert("Please enter a valid 16-digit card number.");
+                    return;
+                }
+                if (!cardHolder) {
+                    alert("Please enter the cardholder name.");
+                    return;
+                }
+                if (expiry.length < 5 || !expiry.includes('/')) {
+                    alert("Please enter a valid expiry date (MM/YY).");
+                    return;
+                }
+                if (cvv.length < 3) {
+                    alert("Please enter a valid 3 or 4-digit CVV.");
+                    return;
+                }
+                paymentDetails = `Card: ending in ${cardNum.slice(-4)} (${cardHolder})`;
+            } else {
+                paymentDetails = "Cash on Delivery";
+            }
+
+            // Open Animation Modal
+            const modal = document.getElementById('payModal');
+            modal.classList.add('active');
+
+            const s1 = document.getElementById('step1');
+            const s2 = document.getElementById('step2');
+            const s3 = document.getElementById('step3');
+
+            await new Promise(r => setTimeout(r, 600));
+            s1.className = "pay-status-row done";
+            s1.innerHTML = "<span>✓</span> <span>1. Payment credentials verified!</span>";
+            s2.className = "pay-status-row active";
+
+            await new Promise(r => setTimeout(r, 700));
+            s2.className = "pay-status-row done";
+            s2.innerHTML = "<span>✓</span> <span>2. Bank authorization successful!</span>";
+            s3.className = "pay-status-row active";
+
+            try {
+                const restaurantId = cart[0]?.restaurant_id || "REST001";
+                const response = await fetch("/api/process-payment", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        customer_name: checkoutInfo.customer_name || "Guest Customer",
+                        customer_location: checkoutInfo.customer_location || "Bandra",
+                        address: checkoutInfo.address || "Mumbai",
+                        phone: checkoutInfo.phone || "",
+                        notes: checkoutInfo.notes || "",
+                        restaurant_id: restaurantId,
+                        cart: cart,
+                        payment_method: currentMethod,
+                        payment_details: paymentDetails,
+                        total_amount: total
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || "Payment or dispatch failed.");
+                }
+
+                s3.className = "pay-status-row done";
+                s3.innerHTML = `<span>✓</span> <span>3. Order ${data.order_id} Dispatched to ${data.rider}!</span>`;
+
+                document.getElementById('modalTitle').innerText = "🎉 Order Placed Successfully!";
+                document.getElementById('modalDesc').innerText = `Redirecting you to live Dijkstra tracking...`;
+                document.getElementById('modalSpinner').style.display = "none";
+
+                // Clear cart and checkout
+                localStorage.removeItem("quickbite_cart");
+                localStorage.removeItem("quickbite_checkout");
+
+                await new Promise(r => setTimeout(r, 1000));
+                window.location.href = `/track/${encodeURIComponent(data.order_id)}`;
+
+            } catch (err) {
+                modal.classList.remove('active');
+                alert("Order Dispatch Error: " + err.message);
+            }
+        }
+
+        renderSummary();
+    </script>
+</body>
+</html>

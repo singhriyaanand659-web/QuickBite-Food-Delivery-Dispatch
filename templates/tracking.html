@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order #{{ order.order_id if order else '' }} — QuickBite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --orange: #ff5a1f;
+            --orange-dark: #e84d16;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --green: #10b981;
+            --green-dark: #059669;
+            --blue: #3b82f6;
+        }
+        body {
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .navbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--orange);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #475569;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .nav-links a:hover { color: var(--orange); }
+        .page {
+            width: min(1150px, 92%);
+            margin: 35px auto 80px;
+        }
+        .track-hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .track-hero h1 {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+        .layout {
+            display: grid;
+            grid-template-columns: 1.4fr 0.9fr;
+            gap: 25px;
+            align-items: start;
+        }
+        .card {
+            background: white;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            padding: 28px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+        .card-header h2 {
+            font-size: 18px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        /* 7-STAGE PROGRESS TIMELINE */
+        .stage-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            margin: 20px 0;
+            padding-left: 10px;
+        }
+        .stage-line {
+            position: absolute;
+            top: 15px;
+            bottom: 25px;
+            left: 24px;
+            width: 3px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+        .stage-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            z-index: 2;
+        }
+        .stage-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #cbd5e1;
+            display: grid;
+            place-items: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: #64748b;
+            transition: all 0.3s;
+        }
+        .stage-item.done .stage-icon {
+            background: var(--green);
+            border-color: var(--green);
+            color: white;
+        }
+        .stage-item.current .stage-icon {
+            background: white;
+            border-color: var(--orange);
+            color: var(--orange);
+            box-shadow: 0 0 0 4px rgba(255, 90, 31, 0.15);
+            font-size: 15px;
+        }
+        .stage-text strong {
+            display: block;
+            font-size: 14px;
+            color: var(--text);
+        }
+        .stage-text span {
+            font-size: 12px;
+            color: var(--muted);
+        }
+        .stage-item.current .stage-text strong {
+            color: var(--orange);
+        }
+        /* ROUTE PATH */
+        .route-flow {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 15px 0;
+        }
+        .route-node {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #334155;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .route-node.start { border-color: #3b82f6; color: #1d4ed8; }
+        .route-node.restaurant { border-color: #f59e0b; color: #b45309; }
+        .route-node.customer { border-color: #10b981; color: #047857; }
+        .route-arrow { color: #94a3b8; font-size: 12px; }
+        .rider-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+            margin-top: 15px;
+        }
+        .rider-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #ffedd5;
+            color: var(--orange);
+            display: grid;
+            place-items: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .btn-whatsapp-rider {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #25d366;
+            color: white !important;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 14px;
+        }
+        .btn-whatsapp-rider:hover { background: #20ba59; }
+        .btn-advance {
+            background: #1e293b;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-advance:hover { background: #0f172a; }
+        .eta-banner {
+            background: #fff8f5;
+            border: 1px solid #fed7aa;
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .eta-banner strong { font-size: 24px; color: var(--orange); font-weight: 900; }
+        @media (max-width: 850px) {
+            .layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="/" class="logo">
+            <span>🍕</span> QuickBite
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/orders">My Orders</a>
+            <a href="/faq">FAQ</a>
+            <a href="/help">Help</a>
+            {% if current_user %}
+                <div class="user-nav-wrapper">
+                    <button class="user-avatar-btn" onclick="toggleUserDropdown(event)">
+                        <span>{{ current_user.avatar or '👨‍💼' }}</span>
+                        <span>{{ current_user.name.split(' ')[0] }}</span>
+                        <span style="font-size:10px; color:#94a3b8;">▼</span>
+                    </button>
+                    <div id="userDropdownMenu" class="user-dropdown-menu">
+                        <div class="user-dropdown-header">
+                            <strong>{{ current_user.name }}</strong>
+                            <span>{{ current_user.email }}</span>
+                        </div>
+                        <a href="{{ url_for('profile_page') }}" class="user-dropdown-link">👤 My Profile</a>
+                        <a href="{{ url_for('orders_page') }}" class="user-dropdown-link">📦 My Orders</a>
+                        <a href="{{ url_for('cart') }}" class="user-dropdown-link">🛒 View Cart</a>
+                        <a href="{{ url_for('logout') }}" class="user-dropdown-link logout">🚪 Log Out</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ url_for('login_page') }}" class="nav-signin-btn">
+                    <span>👤 Sign In</span>
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="page">
+        {% if order %}
+            <div class="track-hero">
+                <div>
+                    <h1>📍 Live Order Tracking</h1>
+                    <p style="color:var(--muted); font-size:14px; margin-top:4px;">
+                        Order <strong>#{{ order.order_id }}</strong> • Placed from <strong>{{ order.restaurant or "Spice Kitchen" }}</strong>
+                    </p>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <button class="btn-advance" onclick="advanceOrderStatus('{{ order.order_id }}')">
+                        ⚡ Simulate Next Stage
+                    </button>
+                    <a href="/orders" style="color:var(--muted); font-weight:700; text-decoration:none; font-size:13px;">View All Orders →</a>
+                </div>
+            </div>
+
+            <!-- ETA BANNER -->
+            <div class="eta-banner">
+                <div>
+                    <span style="font-size:13px; color:#9a3412; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Estimated Time of Arrival</span>
+                    <p style="color:#78350f; font-size:13px; margin-top:2px;">Calculated dynamically by Dijkstra shortest-path engine</p>
+                </div>
+                <strong><span id="etaDisplay">{{ order.eta | round(1) if order.eta else '28.5' }}</span> mins</strong>
+            </div>
+
+            <div class="layout">
+                <!-- 7 STAGE PROGRESS -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><span>🚚</span> Order Status Lifecycle</h2>
+                        <span id="currentStatusBadge" class="status-chip status-badge-{{ order.status | lower }}">
+                            {{ order.status | replace('_', ' ') }}
+                        </span>
+                    </div>
+
+                    {% set cur = order.status | lower %}
+                    <div class="stage-timeline" id="stageTimeline">
+                        <div class="stage-line"></div>
+
+                        <!-- 1. Order Placed -->
+                        <div class="stage-item done" id="st-placed">
+                            <div class="stage-icon">✓</div>
+                            <div class="stage-text">
+                                <strong>1. Order Placed</strong>
+                                <span>Order received in FIFO restaurant queue</span>
+                            </div>
+                        </div>
+
+                        <!-- 2. Confirmed -->
+                        <div class="stage-item {{ 'done' if cur in ['confirmed', 'preparing', 'rider_assigned', 'awaiting_rider', 'picked_up', 'on_the_way', 'out_for_delivery', 'delivered'] else ('current' if cur == 'placed' else '') }}" id="st-confirmed">
+                            <div class="stage-icon">2</div>
+                            <div class="stage-text">
+                                <strong>2. Confirmed</strong>
+                                <span>Restaurant accepted your order</span>
+                            </div>
+                        </div>
+
+                        <!-- 3. Preparing -->
+                        <div class="stage-item {{ 'done' if cur in ['preparing', 'rider_assigned', 'awaiting_rider', 'picked_up', 'on_the_way', 'out_for_delivery', 'delivered'] else ('current' if cur == 'confirmed' else '') }}" id="st-preparing">
+                            <div class="stage-icon">3</div>
+                            <div class="stage-text">
+                                <strong>3. Preparing Food</strong>
+                                <span>Chef is preparing your hot meals</span>
+                            </div>
+                        </div>
+
+                        <!-- 4. Rider Assigned -->
+                        <div class="stage-item {{ 'done' if cur in ['rider_assigned', 'awaiting_rider', 'picked_up', 'on_the_way', 'out_for_delivery', 'delivered'] else ('current' if cur == 'preparing' else '') }}" id="st-rider_assigned">
+                            <div class="stage-icon">4</div>
+                            <div class="stage-text">
+                                <strong>4. Rider Assigned</strong>
+                                <span>Min-Heap matched closest idle rider ({{ order.rider or "Assigned Rider" }})</span>
+                            </div>
+                        </div>
+
+                        <!-- 5. Picked Up -->
+                        <div class="stage-item {{ 'done' if cur in ['picked_up', 'on_the_way', 'out_for_delivery', 'delivered'] else ('current' if cur in ['rider_assigned', 'awaiting_rider'] else '') }}" id="st-picked_up">
+                            <div class="stage-icon">5</div>
+                            <div class="stage-text">
+                                <strong>5. Order Picked Up</strong>
+                                <span>Rider picked up order from restaurant</span>
+                            </div>
+                        </div>
+
+                        <!-- 6. On The Way -->
+                        <div class="stage-item {{ 'done' if cur in ['on_the_way', 'out_for_delivery', 'delivered'] else ('current' if cur == 'picked_up' else '') }}" id="st-on_the_way">
+                            <div class="stage-icon">6</div>
+                            <div class="stage-text">
+                                <strong>6. On The Way</strong>
+                                <span>Rider transit along Dijkstra shortest route</span>
+                            </div>
+                        </div>
+
+                        <!-- 7. Delivered -->
+                        <div class="stage-item {{ 'done' if cur == 'delivered' else ('current' if cur in ['on_the_way', 'out_for_delivery'] else '') }}" id="st-delivered">
+                            <div class="stage-icon">7</div>
+                            <div class="stage-text">
+                                <strong>7. Delivered</strong>
+                                <span>Food delivered safely at your destination</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if cur in ['placed', 'confirmed', 'preparing', 'rider_assigned', 'awaiting_rider', 'queued'] %}
+                        <div style="margin-top:20px; border-top:1px solid var(--border); padding-top:16px;">
+                            <button class="btn-advance" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; width:100%; padding:12px;" onclick="cancelFromTracking('{{ order.order_id }}')">
+                                ✕ Cancel Order (Eligible for Full Refund)
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- ROUTE & RIDER INFO -->
+                <div>
+                    <!-- DIJKSTRA ROUTE CARD -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><span>🛣️</span> Dijkstra Shortest Path</h2>
+                        </div>
+                        <p style="font-size:13px; color:var(--muted); margin-bottom:10px;">
+                            Optimal path computed by weighted graph Dijkstra algorithm:
+                        </p>
+
+                        <div class="route-flow">
+                            {% if order.route %}
+                                {% for node in order.route %}
+                                    <span class="route-node {{ 'start' if loop.first else ('customer' if loop.last else ('restaurant' if node == (order.restaurant_location or 'Bandra') else '')) }}">
+                                        📍 {{ node }}
+                                    </span>
+                                    {% if not loop.last %}
+                                        <span class="route-arrow">➔</span>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <span class="route-node start">📍 Bandra</span>
+                                <span class="route-arrow">➔</span>
+                                <span class="route-node customer">📍 Dadar</span>
+                            {% endif %}
+                        </div>
+
+                        <div style="font-size:12px; color:var(--muted); line-height:1.5;">
+                            • Starting Node (Rider Location): <strong>{{ order.route[0] if order.route else 'Bandra' }}</strong><br>
+                            • Restaurant Node: <strong>{{ order.restaurant_location or 'Bandra' }}</strong><br>
+                            • Delivery Node: <strong>{{ order.customer_location or 'Dadar' }}</strong>
+                        </div>
+                    </div>
+
+                    <!-- RIDER CONTACT CARD -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><span>🚴</span> Assigned Delivery Rider</h2>
+                        </div>
+
+                        <div class="rider-card">
+                            <div class="rider-avatar">🛵</div>
+                            <div>
+                                <strong style="font-size:15px; display:block;">{{ order.rider or "Aarav (R001)" }}</strong>
+                                <span style="font-size:12px; color:var(--muted);">⭐ 4.9 Rating • Hero Electric Scooter</span>
+                                <div style="font-size:12px; color:var(--green-dark); font-weight:700; margin-top:2px;">
+                                    🟢 Active on route
+                                </div>
+                            </div>
+                        </div>
+
+                        {% set rider_name = order.rider or "Delivery Rider" %}
+                        {% set cust_loc = order.customer_location or "Dadar" %}
+                        {% set wa_rider_msg = "Hi " ~ rider_name ~ ", I am tracking Order #" ~ order.order_id ~ " to " ~ cust_loc ~ ". Could you please share your latest location update?" %}
+                        <a href="https://wa.me/{{ whatsapp_number }}?text={{ wa_rider_msg | urlencode }}" target="_blank" class="btn-whatsapp-rider">
+                            <span>💬 Contact Rider on WhatsApp</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <!-- ORDER NOT FOUND -->
+            <div class="card" style="text-align:center; padding:60px 20px;">
+                <div style="font-size:48px; margin-bottom:15px;">🔍</div>
+                <h2>Order Not Found</h2>
+                <p style="color:var(--muted); font-size:14px; max-width:450px; margin:10px auto 25px;">
+                    We couldn't find active dispatch information for this order ID.
+                </p>
+                <a href="/orders" class="btn-advance" style="text-decoration:none; padding:12px 24px; font-size:14px;">View My Orders</a>
+            </div>
+        {% endif %}
+    </main>
+
+    <!-- FLOATING WHATSAPP -->
+    <a href="https://wa.me/{{ whatsapp_number }}?text=Hi%20QuickBite%20Support,%20I%20am%20tracking%20Order%20%23{{ order.order_id if order else '' }}." target="_blank" class="floating-whatsapp-btn" title="Chat with QuickBite Support on WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+        <span>WhatsApp Support</span>
+    </a>
+
+    <!-- UNIVERSAL FOOTER -->
+    <footer class="qb-footer">
+        <div class="qb-footer-container">
+            <div class="qb-footer-col">
+                <h4>QuickBite Dispatch</h4>
+                <p>High-performance graph-based food delivery dispatch engine powered by Dijkstra shortest path routing and Min-Heap priority rider matching.</p>
+                <div class="qb-footer-badge">🟢 Dispatch Engine Active</div>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Navigation</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/orders">My Orders</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/checkout">Checkout</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Customer Care</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/help">Help & Support</a></li>
+                    <li><a href="/refunds">Refund Status</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Policies</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/refund-policy">Refund & Cancellation Policy</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="qb-footer-bottom">
+            <div>© {{ current_year }} QuickBite Technologies Inc. All rights reserved.</div>
+            <div>Dijkstra Shortest Path Dispatch • Min-Heap Rider Allocation</div>
+        </div>
+    </footer>
+
+    <script>
+        async function advanceOrderStatus(orderId) {
+            try {
+                const res = await fetch(`/api/order-status/advance/${encodeURIComponent(orderId)}`, {
+                    method: "POST"
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.message || "Could not advance status");
+                window.location.reload();
+            } catch (err) {
+                alert("Stage Simulation: " + err.message);
+            }
+        }
+
+        async function cancelFromTracking(orderId) {
+            const reason = prompt("Please provide a cancellation reason:", "Placed order by mistake");
+            if (!reason) return;
+
+            try {
+                const res = await fetch("/api/cancel-order", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ order_id: orderId, reason })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.message || "Failed to cancel order.");
+                alert(data.message);
+                if (data.refund_url) {
+                    window.location.href = data.refund_url;
+                } else {
+                    window.location.reload();
+                }
+            } catch (err) {
+                alert("Cancellation Error: " + err.message);
+            }
+        }
+
+        function toggleUserDropdown(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.toggle('show');
+        }
+        window.addEventListener('click', function() {
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.remove('show');
+        });
+    </script>
+</body>
+</html>

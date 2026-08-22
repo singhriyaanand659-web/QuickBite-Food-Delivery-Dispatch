@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequently Asked Questions — QuickBite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --orange: #ff5a1f;
+            --orange-dark: #e84d16;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --green: #10b981;
+        }
+        body {
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .navbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--orange);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #475569;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .nav-links a:hover { color: var(--orange); }
+        .page {
+            width: min(900px, 92%);
+            margin: 45px auto 80px;
+        }
+        .faq-hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .faq-hero h1 {
+            font-size: 38px;
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            margin-bottom: 12px;
+        }
+        .faq-hero p {
+            color: var(--muted);
+            font-size: 16px;
+            max-width: 580px;
+            margin: 0 auto 25px;
+        }
+        .faq-search {
+            max-width: 520px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .faq-search input {
+            width: 100%;
+            padding: 14px 20px 14px 44px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 15px;
+            outline: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+        .faq-search input:focus {
+            border-color: var(--orange);
+        }
+        .faq-search span {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 16px;
+        }
+        .faq-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+        .faq-tab {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 800;
+            color: #475569;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .faq-tab:hover, .faq-tab.active {
+            background: var(--orange);
+            color: white;
+            border-color: var(--orange);
+        }
+        .faq-category {
+            margin-bottom: 35px;
+        }
+        .faq-category-title {
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #1e293b;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="/" class="logo">
+            <span>🍕</span> QuickBite
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/orders">My Orders</a>
+            <a href="/help">Help & Support</a>
+            <a href="/contact">Contact</a>
+            {% if current_user %}
+                <div class="user-nav-wrapper">
+                    <button class="user-avatar-btn" onclick="toggleUserDropdown(event)">
+                        <span>{{ current_user.avatar or '👨‍💼' }}</span>
+                        <span>{{ current_user.name.split(' ')[0] }}</span>
+                        <span style="font-size:10px; color:#94a3b8;">▼</span>
+                    </button>
+                    <div id="userDropdownMenu" class="user-dropdown-menu">
+                        <div class="user-dropdown-header">
+                            <strong>{{ current_user.name }}</strong>
+                            <span>{{ current_user.email }}</span>
+                        </div>
+                        <a href="{{ url_for('profile_page') }}" class="user-dropdown-link">👤 My Profile</a>
+                        <a href="{{ url_for('orders_page') }}" class="user-dropdown-link">📦 My Orders</a>
+                        <a href="{{ url_for('cart') }}" class="user-dropdown-link">🛒 View Cart</a>
+                        <a href="{{ url_for('logout') }}" class="user-dropdown-link logout">🚪 Log Out</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ url_for('login_page') }}" class="nav-signin-btn">
+                    <span>👤 Sign In</span>
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="page">
+        <div class="faq-hero">
+            <h1>Frequently Asked Questions</h1>
+            <p>Everything you need to know about QuickBite orders, dispatch algorithms, payment methods, cancellation and refunds.</p>
+            <div class="faq-search">
+                <span>🔍</span>
+                <input type="text" id="faqSearchInput" placeholder="Search questions (e.g. refund, dijkstra, cancel)..." oninput="filterFaqs()">
+            </div>
+        </div>
+
+        <div class="faq-tabs">
+            <button class="faq-tab active" onclick="filterCategory('all')">All Questions</button>
+            <button class="faq-tab" onclick="filterCategory('orders')">📦 Orders</button>
+            <button class="faq-tab" onclick="filterCategory('payments')">💳 Payments</button>
+            <button class="faq-tab" onclick="filterCategory('cancellation')">❌ Cancellation</button>
+            <button class="faq-tab" onclick="filterCategory('refunds')">💰 Refunds</button>
+            <button class="faq-tab" onclick="filterCategory('delivery')">🚚 Delivery</button>
+            <button class="faq-tab" onclick="filterCategory('tracking')">📍 Tracking & Dijkstra</button>
+            <button class="faq-tab" onclick="filterCategory('riders')">🚴 Riders & Min-Heap</button>
+        </div>
+
+        <div id="faqContainer">
+            <!-- 1. ORDERS -->
+            <div class="faq-category" data-cat="orders">
+                <div class="faq-category-title"><span>📦</span> Orders</div>
+                
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>How do I place an order on QuickBite?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>You can browse restaurants from the homepage, select items from the menu, review your cart, and proceed through checkout to choose your preferred payment mode (UPI, Card, or COD). Once placed, your order is automatically queued and dispatched to the nearest available rider.</p>
+                    </div>
+                </div>
+
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>Is there a minimum order value?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>No! QuickBite has no mandatory minimum order amount. You can order single items or family meals with a standard nominal delivery fee of ₹5.</p>
+                    </div>
+                </div>
+
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>Can I modify my food order after placing it?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>Once an order enters the kitchen preparation stage, items cannot be edited. If you need to make changes, you can cancel the order before food preparation and place a new one with your updated items.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. PAYMENTS -->
+            <div class="faq-category" data-cat="payments">
+                <div class="faq-category-title"><span>💳</span> Payments</div>
+
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>What payment modes are supported?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>QuickBite supports Cash on Delivery (COD), UPI (Google Pay, PhonePe, Paytm, BHIM, QR code), and all major Credit and Debit Cards (Visa, MasterCard, RuPay). In this environment, all online payments use an authentic realistic demo authorization flow without charging real currency.</p>
+                    </div>
+                </div>
+
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>Are my payment credentials secure?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>Yes. All payment payloads are validated using client-side and server-side encryption simulations, ensuring zero plain-text leaks.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. CANCELLATION -->
+            <div class="faq-category" data-cat="cancellation">
+                <div class="faq-category-title"><span>❌</span> Order Cancellation</div>
+
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>When am I allowed to cancel an order?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>Orders can be cancelled at any point during the "Placed", "Confirmed", "Preparing", or "Rider Assigned" stages directly from the My Orders or Tracking page. Once an order is marked "Picked Up" or "On The Way", online self-cancellation is closed to prevent food wastage.</p>
+                    </div>
+                </div>
+
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>Are there any cancellation fees?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>QuickBite offers 100% free cancellation for orders cancelled within the allowed window. Any prepaid amount is automatically queued for immediate refund.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. REFUNDS -->
+            <div class="faq-category" data-cat="refunds">
+                <div class="faq-category-title"><span>💰</span> Refunds</div>
+
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>How does the refund system work?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>When you cancel a prepaid order (UPI or Card), our system immediately creates a Refund Record and progresses through 3 transparent states: Refund Initiated → Processing → Completed. You can track this in real-time on our dedicated Refund Tracker page.</p>
+                    </div>
+                </div>
+
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>What if I placed my order with Cash on Delivery?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>For Cash on Delivery orders, no upfront money was deducted, so no monetary refund is necessary. The order is simply marked cancelled and rider dispatch is halted.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. DELIVERY -->
+            <div class="faq-category" data-cat="delivery">
+                <div class="faq-category-title"><span>🚚</span> Delivery</div>
+
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>Which delivery locations are supported?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>QuickBite covers prime Mumbai graph nodes: Bandra, Dadar, Andheri, Kurla, BKC, Ghatkopar, Powai, Goregaon, and Thane. All road weights represent realistic travel times calculated by our graph algorithms.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. TRACKING & DIJKSTRA -->
+            <div class="faq-category" data-cat="tracking">
+                <div class="faq-category-title"><span>📍</span> Live Tracking & Dijkstra Algorithm</div>
+
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>How does Dijkstra's Algorithm compute the shortest delivery path?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>Our backend models the city as a weighted LocationGraph. When an order is assigned, Dijkstra's algorithm finds the mathematical minimum-time path for Leg 1 (Rider → Restaurant) and Leg 2 (Restaurant → Customer), ensuring minimal ETA.</p>
+                    </div>
+                </div>
+
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>What are the 7 order status lifecycle stages?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>The 7 stages are: 1. Order Placed → 2. Confirmed → 3. Preparing → 4. Rider Assigned → 5. Picked Up → 6. On The Way → 7. Delivered. You can follow live updates along this timeline on the Tracking page.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. RIDERS & MIN-HEAP -->
+            <div class="faq-category" data-cat="riders">
+                <div class="faq-category-title"><span>🚴</span> Riders & Min-Heap Dispatch</div>
+
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>How does the Min-Heap priority queue select the best rider?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>Rather than an inefficient linear scan, our dispatch engine pushes all reachable idle riders into a binary Min-Heap keyed by Dijkstra travel time to the restaurant. Extracting the root node in O(log N) guarantees the optimal closest rider is assigned instantly.</p>
+                    </div>
+                </div>
+
+                <div class="qb-accordion-item">
+                    <button class="qb-accordion-header" onclick="toggleFaq(this)">
+                        <span>Can I contact my assigned delivery rider?</span>
+                        <span class="qb-accordion-icon">▼</span>
+                    </button>
+                    <div class="qb-accordion-body">
+                        <p>Yes! On the Track Order page, click "Contact Rider on WhatsApp" to open an official WhatsApp chat with your order details prefilled for immediate communication.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FLOATING WHATSAPP -->
+    <a href="https://wa.me/{{ whatsapp_number }}?text=Hi%20QuickBite%20Support,%20I%20have%20a%20question%20that%20is%20not%20in%20the%20FAQ." target="_blank" class="floating-whatsapp-btn" title="Chat with QuickBite Support on WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+        <span>WhatsApp Support</span>
+    </a>
+
+    <!-- UNIVERSAL FOOTER -->
+    <footer class="qb-footer">
+        <div class="qb-footer-container">
+            <div class="qb-footer-col">
+                <h4>QuickBite Dispatch</h4>
+                <p>High-performance graph-based food delivery dispatch engine powered by Dijkstra shortest path routing and Min-Heap priority rider matching.</p>
+                <div class="qb-footer-badge">🟢 Dispatch Engine Active</div>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Navigation</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/orders">My Orders</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/checkout">Checkout</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Customer Care</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/help">Help & Support</a></li>
+                    <li><a href="/refunds">Refund Status</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Policies</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/refund-policy">Refund & Cancellation Policy</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="qb-footer-bottom">
+            <div>© {{ current_year }} QuickBite Technologies Inc. All rights reserved.</div>
+            <div>Dijkstra Shortest Path Dispatch • Min-Heap Rider Allocation</div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleFaq(header) {
+            const item = header.parentElement;
+            item.classList.toggle('open');
+        }
+
+        function filterCategory(cat) {
+            document.querySelectorAll('.faq-tab').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const categories = document.querySelectorAll('.faq-category');
+            categories.forEach(el => {
+                if (cat === 'all' || el.getAttribute('data-cat') === cat) {
+                    el.style.display = 'block';
+                } else {
+                    el.style.display = 'none';
+                }
+            });
+        }
+
+        function filterFaqs() {
+            const query = document.getElementById('faqSearchInput').value.toLowerCase().trim();
+            const items = document.querySelectorAll('.qb-accordion-item');
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleUserDropdown(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.toggle('show');
+        }
+        window.addEventListener('click', function() {
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.remove('show');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms & Conditions — QuickBite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --orange: #ff5a1f;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .navbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--orange);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #475569;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .nav-links a:hover { color: var(--orange); }
+        .page {
+            width: min(850px, 92%);
+            margin: 45px auto 80px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            padding: 40px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+            line-height: 1.7;
+        }
+        .card h1 {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+        .card h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin: 30px 0 12px;
+            color: #1e293b;
+        }
+        .card p {
+            color: #334155;
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+        .card ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+            color: #334155;
+            font-size: 14px;
+        }
+        .card li { margin-bottom: 8px; }
+        .meta-tag {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 25px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="/" class="logo">
+            <span>🍕</span> QuickBite
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/orders">My Orders</a>
+            <a href="/faq">FAQ</a>
+            <a href="/help">Help</a>
+            {% if current_user %}
+                <div class="user-nav-wrapper">
+                    <button class="user-avatar-btn" onclick="toggleUserDropdown(event)">
+                        <span>{{ current_user.avatar or '👨‍💼' }}</span>
+                        <span>{{ current_user.name.split(' ')[0] }}</span>
+                        <span style="font-size:10px; color:#94a3b8;">▼</span>
+                    </button>
+                    <div id="userDropdownMenu" class="user-dropdown-menu">
+                        <div class="user-dropdown-header">
+                            <strong>{{ current_user.name }}</strong>
+                            <span>{{ current_user.email }}</span>
+                        </div>
+                        <a href="{{ url_for('profile_page') }}" class="user-dropdown-link">👤 My Profile</a>
+                        <a href="{{ url_for('orders_page') }}" class="user-dropdown-link">📦 My Orders</a>
+                        <a href="{{ url_for('cart') }}" class="user-dropdown-link">🛒 View Cart</a>
+                        <a href="{{ url_for('logout') }}" class="user-dropdown-link logout">🚪 Log Out</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ url_for('login_page') }}" class="nav-signin-btn">
+                    <span>👤 Sign In</span>
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="page">
+        <div class="card">
+            <h1>Terms & Conditions</h1>
+            <span class="meta-tag">Effective Date: August 2026 • QuickBite Technologies Inc.</span>
+
+            <p>Welcome to QuickBite. By accessing or using the QuickBite Food Delivery Dispatch platform, you agree to comply with and be bound by the following terms and conditions.</p>
+
+            <h2>1. Platform Service Overview</h2>
+            <p>QuickBite provides an intelligent food ordering and dispatch platform connecting customers, partner restaurants, and delivery riders using Dijkstra shortest-path calculations and Min-Heap priority queue algorithms.</p>
+
+            <h2>2. User Accounts & Ordering</h2>
+            <ul>
+                <li>Users agree to provide accurate delivery names, contact numbers, and valid graph delivery locations.</li>
+                <li>Orders placed are immediately queued in restaurant FIFO queues and assigned to the closest available rider.</li>
+            </ul>
+
+            <h2>3. Payment & Pricing</h2>
+            <ul>
+                <li>Prices displayed for menu items are determined by partner restaurants.</li>
+                <li>A nominal delivery charge of ₹5 and platform fee of ₹2 applies to each dispatched web order.</li>
+                <li>Supported payment options include Cash on Delivery, UPI, and Credit/Debit Cards with simulated sandbox processing.</li>
+            </ul>
+
+            <h2>4. Delivery Time & Dispatch Estimation</h2>
+            <p>All Estimated Times of Arrival (ETA) are calculated dynamically based on weighted graph edge weights representing inter-node transit times. External real-world factors such as weather and kitchen rush may result in minor variations.</p>
+
+            <h2>5. Order Cancellation & Refunds</h2>
+            <p>Cancellation is subject to the rules defined in our <a href="/refund-policy" style="color:var(--orange); font-weight:700;">Refund & Cancellation Policy</a>. Cancellations requested before food pickup are eligible for complete automated refund to the payment source.</p>
+
+            <h2>6. Governing Law</h2>
+            <p>These terms shall be governed and construed in accordance with the laws of India. For any legal inquiries, contact <strong>legal@quickbite.dispatch</strong>.</p>
+        </div>
+    </main>
+
+    <!-- FLOATING WHATSAPP -->
+    <a href="https://wa.me/{{ whatsapp_number }}?text=Hi%20QuickBite%20Support,%20I%20have%20a%20question%20regarding%20Terms%20and%20Conditions." target="_blank" class="floating-whatsapp-btn" title="Chat with QuickBite Support on WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+        <span>WhatsApp Support</span>
+    </a>
+
+    <!-- UNIVERSAL FOOTER -->
+    <footer class="qb-footer">
+        <div class="qb-footer-container">
+            <div class="qb-footer-col">
+                <h4>QuickBite Dispatch</h4>
+                <p>High-performance graph-based food delivery dispatch engine powered by Dijkstra shortest path routing and Min-Heap priority rider matching.</p>
+                <div class="qb-footer-badge">🟢 Dispatch Engine Active</div>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Navigation</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/orders">My Orders</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/checkout">Checkout</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Customer Care</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/help">Help & Support</a></li>
+                    <li><a href="/refunds">Refund Status</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Policies</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/refund-policy">Refund & Cancellation Policy</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="qb-footer-bottom">
+            <div>© {{ current_year }} QuickBite Technologies Inc. All rights reserved.</div>
+            <div>Dijkstra Shortest Path Dispatch • Min-Heap Rider Allocation</div>
+        </div>
+    </footer>
+    <script>
+        function toggleUserDropdown(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.toggle('show');
+        }
+        window.addEventListener('click', function() {
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.remove('show');
+        });
+    </script>
+</body>
+</html>

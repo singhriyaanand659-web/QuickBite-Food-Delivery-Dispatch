@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders — QuickBite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --orange: #ff5a1f;
+            --orange-dark: #e84d16;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --green: #10b981;
+            --green-dark: #059669;
+            --red: #ef4444;
+        }
+        body {
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .navbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--orange);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #475569;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .nav-links a:hover { color: var(--orange); }
+        .page {
+            width: min(1050px, 92%);
+            margin: 40px auto 80px;
+        }
+        .page-header {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .page-header h1 {
+            font-size: 34px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+        .page-header p {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .order-card {
+            background: white;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            padding: 26px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+        }
+        .order-card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            border-color: #cbd5e1;
+        }
+        .order-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 18px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .order-id-title {
+            font-size: 18px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .status-chip {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: capitalize;
+        }
+        .order-body {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1.2fr;
+            gap: 20px;
+            align-items: center;
+        }
+        .order-restaurant h3 {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            color: #1e293b;
+        }
+        .order-restaurant p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+        .order-meta {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.6;
+        }
+        .order-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+        }
+        .btn-action {
+            padding: 9px 16px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 150px;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+        .btn-primary {
+            background: var(--orange);
+            color: white;
+        }
+        .btn-primary:hover { background: var(--orange-dark); }
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #334155;
+            border-color: #e2e8f0;
+        }
+        .btn-secondary:hover { background: #e2e8f0; color: #0f172a; }
+        .btn-danger {
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+        .btn-danger:hover { background: #fee2e2; }
+        .btn-refund {
+            background: #ecfdf5;
+            color: #059669;
+            border-color: #a7f3d0;
+        }
+        .btn-refund:hover { background: #d1fae5; }
+        @media (max-width: 800px) {
+            .order-body { grid-template-columns: 1fr; gap: 15px; }
+            .order-actions { align-items: stretch; flex-direction: row; flex-wrap: wrap; }
+            .btn-action { width: auto; flex: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="/" class="logo">
+            <span>🍕</span> QuickBite
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            {% if current_user %}
+                <a href="{{ url_for('profile_page') }}">Profile</a>
+            {% endif %}
+            <a href="/orders" style="color:var(--orange);">My Orders</a>
+            <a href="/cart">Cart</a>
+            <a href="/faq">FAQ</a>
+            <a href="/help">Help</a>
+            {% if current_user %}
+                <div class="user-nav-wrapper">
+                    <button class="user-avatar-btn" onclick="toggleUserDropdown(event)">
+                        <span>{{ current_user.avatar or '👨‍💼' }}</span>
+                        <span>{{ current_user.name.split(' ')[0] }}</span>
+                        <span style="font-size:10px; color:#94a3b8;">▼</span>
+                    </button>
+                    <div id="userDropdownMenu" class="user-dropdown-menu">
+                        <div class="user-dropdown-header">
+                            <strong>{{ current_user.name }}</strong>
+                            <span>{{ current_user.email }}</span>
+                        </div>
+                        <a href="{{ url_for('profile_page') }}" class="user-dropdown-link">👤 My Profile</a>
+                        <a href="{{ url_for('orders_page') }}" class="user-dropdown-link">📦 My Orders</a>
+                        <a href="{{ url_for('cart') }}" class="user-dropdown-link">🛒 View Cart</a>
+                        <a href="{{ url_for('logout') }}" class="user-dropdown-link logout">🚪 Log Out</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ url_for('login_page') }}" class="nav-signin-btn">
+                    <span>👤 Sign In</span>
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="page">
+        <div class="page-header">
+            <div>
+                <h1>📦 My Orders</h1>
+                <p>Manage and track your food deliveries, view algorithmic dispatch routes, or request refunds.</p>
+            </div>
+            <a href="/" class="btn-action btn-primary" style="width:auto; padding:10px 20px;">
+                <span>+ Order Food</span>
+            </a>
+        </div>
+
+        <div class="orders-list" id="ordersList">
+            {% for o in orders %}
+                {% set st = o.status | lower %}
+                <div class="order-card" id="card-{{ o.order_id }}">
+                    <div class="order-top">
+                        <div class="order-id-title">
+                            <span>Order #{{ o.order_id }}</span>
+                            <span class="status-chip status-badge-{{ st }}" id="badge-{{ o.order_id }}">
+                                {{ o.status | replace('_', ' ') }}
+                            </span>
+                        </div>
+                        <div style="font-size:16px; font-weight:900; color:var(--orange);">
+                            ₹{{ o.total if o.total else '249' }}
+                        </div>
+                    </div>
+
+                    <div class="order-body">
+                        <div class="order-restaurant">
+                            <h3>{{ o.restaurant or "Spice Kitchen" }}</h3>
+                            <p>📍 Location: {{ o.restaurant_location or "Bandra" }} → Customer: {{ o.customer_location or o.customer or "Dadar" }}</p>
+                        </div>
+
+                        <div class="order-meta">
+                            <div>🚴 Rider: <strong>{{ o.rider or "Pending Assignment" }}</strong></div>
+                            <div>⏱️ ETA: <strong>{{ o.eta | round(1) if o.eta else '30.0' }} mins</strong></div>
+                            <div>💳 Payment: <strong>{{ (o.payment_method or o.payment_mode or "UPI") | upper }}</strong></div>
+                        </div>
+
+                        <div class="order-actions">
+                            <!-- 1. View Details -->
+                            <button class="btn-action btn-secondary" onclick="viewOrderDetails('{{ o.order_id }}')">
+                                <span>📄 View Details</span>
+                            </button>
+
+                            <!-- 2. Track Order -->
+                            {% if st not in ['delivered', 'cancelled', 'failed'] %}
+                                <a href="/track/{{ o.order_id }}" class="btn-action btn-primary">
+                                    <span>📍 Track Live</span>
+                                </a>
+                            {% else %}
+                                <a href="/track/{{ o.order_id }}" class="btn-action btn-secondary">
+                                    <span>🗺️ View Route</span>
+                                </a>
+                            {% endif %}
+
+                            <!-- 3. Cancel Order (if cancellable) -->
+                            {% if st in ['placed', 'confirmed', 'queued', 'preparing', 'rider_assigned', 'awaiting_rider'] %}
+                                <button class="btn-action btn-danger" id="cancel-btn-{{ o.order_id }}" onclick="openCancelModal('{{ o.order_id }}', '{{ o.payment_method or o.payment_mode or 'upi' }}')">
+                                    <span>✕ Cancel</span>
+                                </button>
+                            {% endif %}
+
+                            <!-- 4. Refund Status (if cancelled) -->
+                            {% if st == 'cancelled' %}
+                                <a href="/refund-status/{{ o.order_id }}" class="btn-action btn-refund">
+                                    <span>💰 Refund Status</span>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <!-- ORDER DETAILS MODAL -->
+    <div class="qb-modal-overlay" id="detailsModal">
+        <div class="qb-modal">
+            <button class="qb-modal-close" onclick="closeDetailsModal()">✕</button>
+            <h2 id="modalOrderTitle" style="font-size:22px; font-weight:900; margin-bottom:16px;">Order Details</h2>
+            <div id="modalOrderContent">
+                <!-- Injected by JS -->
+            </div>
+            <div style="margin-top:24px; text-align:right;">
+                <button class="btn-action btn-secondary" style="width:auto; padding:10px 22px;" onclick="closeDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CANCELLATION MODAL -->
+    <div class="qb-modal-overlay" id="cancelModal">
+        <div class="qb-modal">
+            <button class="qb-modal-close" onclick="closeCancelModal()">✕</button>
+            <h2 style="font-size:22px; font-weight:900; margin-bottom:8px; color:#dc2626;">Cancel Order</h2>
+            <p style="color:var(--muted); font-size:14px; margin-bottom:20px;">
+                Are you sure you want to cancel Order #<strong id="cancelOrderIdText"></strong>?
+            </p>
+
+            <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:12px; padding:14px; margin-bottom:20px; font-size:13px; color:#92400e; line-height:1.5;">
+                <strong>📋 QuickBite Cancellation Rules:</strong><br>
+                • 100% Free cancellation before food pickup.<br>
+                • Prepaid orders (UPI / Card) receive automated instant refund.<br>
+                • Cash on Delivery orders require no payment reversal.
+            </div>
+
+            <form id="cancelOrderForm" onsubmit="event.preventDefault(); submitCancellation();">
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:12px; font-weight:800; color:#475569; margin-bottom:6px; text-transform:uppercase;">Reason for Cancellation</label>
+                    <select id="cancelReasonSelect" class="form-control" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px;" required>
+                        <option value="Placed order by mistake">Placed order by mistake</option>
+                        <option value="Estimated delivery time is too long">Estimated delivery time is too long</option>
+                        <option value="Changed delivery address / location">Changed delivery address / location</option>
+                        <option value="Ordered incorrect food items">Ordered incorrect food items</option>
+                        <option value="Want to change payment method">Want to change payment method</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div style="display:flex; gap:12px; justify-content:flex-end;">
+                    <button type="button" class="btn-action btn-secondary" style="width:auto;" onclick="closeCancelModal()">Keep Order</button>
+                    <button type="submit" class="btn-action btn-danger" style="width:auto; padding:10px 20px;">Confirm Cancellation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FLOATING WHATSAPP -->
+    <a href="https://wa.me/{{ whatsapp_number }}?text=Hi%20QuickBite%20Support,%20I%20have%20an%20inquiry%20about%20my%20orders." target="_blank" class="floating-whatsapp-btn" title="Chat with QuickBite Support on WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+        <span>WhatsApp Support</span>
+    </a>
+
+    <!-- UNIVERSAL FOOTER -->
+    <footer class="qb-footer">
+        <div class="qb-footer-container">
+            <div class="qb-footer-col">
+                <h4>QuickBite Dispatch</h4>
+                <p>High-performance graph-based food delivery dispatch engine powered by Dijkstra shortest path routing and Min-Heap priority rider matching.</p>
+                <div class="qb-footer-badge">🟢 Dispatch Engine Active</div>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Navigation</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/orders">My Orders</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/checkout">Checkout</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Customer Care</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/help">Help & Support</a></li>
+                    <li><a href="/refunds">Refund Status</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Policies</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/refund-policy">Refund & Cancellation Policy</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="qb-footer-bottom">
+            <div>© {{ current_year }} QuickBite Technologies Inc. All rights reserved.</div>
+            <div>Dijkstra Shortest Path Dispatch • Min-Heap Rider Allocation</div>
+        </div>
+    </footer>
+
+    <script>
+        let targetCancelOrderId = null;
+        let targetPaymentMethod = null;
+
+        async function viewOrderDetails(orderId) {
+            try {
+                const res = await fetch(`/api/track/${encodeURIComponent(orderId)}`);
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.message || "Failed to load order details.");
+
+                document.getElementById('modalOrderTitle').innerText = `Order Details #${data.order_id}`;
+                
+                const routeStr = Array.isArray(data.route) && data.route.length > 0 ? data.route.join(' → ') : 'Direct Path';
+                const itemsHtml = Array.isArray(data.cart) && data.cart.length > 0
+                    ? data.cart.map(i => `<div style="display:flex; justify-content:space-between; padding:6px 0; font-size:13px;"><span>${i.name} × ${i.quantity}</span><strong>₹${i.price * i.quantity}</strong></div>`).join('')
+                    : `<div style="font-size:13px; color:var(--muted);">Standard Combo Platter (1x) — ₹${data.total || 249}</div>`;
+
+                document.getElementById('modalOrderContent').innerHTML = `
+                    <div style="background:#f8fafc; border-radius:12px; padding:16px; margin-bottom:16px; font-size:13px; line-height:1.6;">
+                        <div><strong>Customer:</strong> ${data.customer || "Guest Customer"}</div>
+                        <div><strong>Delivery Location Node:</strong> ${data.customer_location || "Dadar"}</div>
+                        <div><strong>Address:</strong> ${data.address || "Mumbai"}</div>
+                        <div><strong>Restaurant:</strong> ${data.restaurant || "Spice Kitchen"} (${data.restaurant_location || "Bandra"})</div>
+                        <div><strong>Assigned Rider:</strong> ${data.rider || "Available Rider"} (${data.rider_id || "R001"})</div>
+                        <div><strong>Dijkstra Route:</strong> ${routeStr}</div>
+                        <div><strong>Estimated Travel Time:</strong> ${(Number(data.eta) || 0).toFixed(1)} mins</div>
+                    </div>
+
+                    <h4 style="font-size:14px; font-weight:800; margin-bottom:8px;">Dishes Ordered:</h4>
+                    <div style="border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:12px;">
+                        ${itemsHtml}
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:900; margin-top:10px;">
+                        <span>Total Paid:</span>
+                        <span style="color:var(--orange);">₹${data.total || 249}</span>
+                    </div>
+
+                    <div style="margin-top:14px; font-size:12px; color:var(--muted);">
+                        Payment Mode: <strong>${(data.payment_method || data.payment_mode || "UPI").toUpperCase()}</strong> (${data.payment_details || "Authorized"})
+                    </div>
+                `;
+
+                document.getElementById('detailsModal').classList.add('active');
+            } catch (err) {
+                alert("Error loading order details: " + err.message);
+            }
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').classList.remove('active');
+        }
+
+        function openCancelModal(orderId, paymentMethod) {
+            targetCancelOrderId = orderId;
+            targetPaymentMethod = paymentMethod;
+            document.getElementById('cancelOrderIdText').innerText = orderId;
+            document.getElementById('cancelModal').classList.add('active');
+        }
+
+        function closeCancelModal() {
+            document.getElementById('cancelModal').classList.remove('active');
+        }
+
+        async function submitCancellation() {
+            if (!targetCancelOrderId) return;
+            const reason = document.getElementById('cancelReasonSelect').value;
+
+            try {
+                const res = await fetch("/api/cancel-order", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ order_id: targetCancelOrderId, reason: reason })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.message || "Failed to cancel order.");
+
+                closeCancelModal();
+                alert(data.message || `Order ${targetCancelOrderId} has been cancelled.`);
+
+                // Update UI badge
+                const badge = document.getElementById(`badge-${targetCancelOrderId}`);
+                if (badge) {
+                    badge.className = "status-chip status-badge-cancelled";
+                    badge.innerText = "Cancelled";
+                }
+                const btn = document.getElementById(`cancel-btn-${targetCancelOrderId}`);
+                if (btn) btn.remove();
+
+                // If prepaid, redirect or offer refund status link
+                if (data.refund_url) {
+                    window.location.href = data.refund_url;
+                } else {
+                    window.location.reload();
+                }
+            } catch (err) {
+                alert("Cancellation Error: " + err.message);
+            }
+        }
+
+        function toggleUserDropdown(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.toggle('show');
+        }
+        window.addEventListener('click', function() {
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.remove('show');
+        });
+    </script>
+</body>
+</html>

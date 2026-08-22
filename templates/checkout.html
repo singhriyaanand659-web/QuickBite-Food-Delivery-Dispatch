@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout — QuickBite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --orange: #ff5a1f;
+            --orange-dark: #e84d16;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --green: #10b981;
+        }
+        body {
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .navbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--orange);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #475569;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .nav-links a:hover { color: var(--orange); }
+        .page {
+            width: min(1100px, 92%);
+            margin: 35px auto 80px;
+        }
+        .steps-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 35px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+        }
+        .step-item.active { color: var(--orange); }
+        .step-item.completed { color: var(--green); }
+        .step-circle {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 12px;
+        }
+        .step-item.active .step-circle {
+            background: var(--orange);
+            color: white;
+        }
+        .step-item.completed .step-circle {
+            background: var(--green);
+            color: white;
+        }
+        .step-divider {
+            width: 40px;
+            height: 2px;
+            background: #cbd5e1;
+        }
+        .layout {
+            display: grid;
+            grid-template-columns: 1.3fr 0.9fr;
+            gap: 30px;
+            align-items: start;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 28px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            font-size: 19px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            color: #475569;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .form-control:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: #475569;
+        }
+        .summary-item.total {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--text);
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            margin-top: 14px;
+        }
+        .btn-proceed {
+            width: 100%;
+            padding: 16px;
+            background: var(--orange);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 16px rgba(255, 90, 31, 0.25);
+            margin-top: 20px;
+        }
+        .btn-proceed:hover {
+            background: var(--orange-dark);
+            transform: translateY(-1px);
+        }
+        .cart-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+        }
+        @media (max-width: 800px) {
+            .layout { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="/" class="logo">
+            <span>🍕</span> QuickBite
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/orders">My Orders</a>
+            <a href="/cart">Cart</a>
+            <a href="/help">Help</a>
+            {% if current_user %}
+                <div class="user-nav-wrapper">
+                    <button class="user-avatar-btn" onclick="toggleUserDropdown(event)">
+                        <span>{{ current_user.avatar or '👨‍💼' }}</span>
+                        <span>{{ current_user.name.split(' ')[0] }}</span>
+                        <span style="font-size:10px; color:#94a3b8;">▼</span>
+                    </button>
+                    <div id="userDropdownMenu" class="user-dropdown-menu">
+                        <div class="user-dropdown-header">
+                            <strong>{{ current_user.name }}</strong>
+                            <span>{{ current_user.email }}</span>
+                        </div>
+                        <a href="{{ url_for('profile_page') }}" class="user-dropdown-link">👤 My Profile</a>
+                        <a href="{{ url_for('orders_page') }}" class="user-dropdown-link">📦 My Orders</a>
+                        <a href="{{ url_for('cart') }}" class="user-dropdown-link">🛒 View Cart</a>
+                        <a href="{{ url_for('logout') }}" class="user-dropdown-link logout">🚪 Log Out</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ url_for('login_page') }}" class="nav-signin-btn">
+                    <span>👤 Sign In</span>
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="page">
+        <!-- STEPS -->
+        <div class="steps-bar">
+            <div class="step-item completed">
+                <div class="step-circle">✓</div>
+                <span>Cart</span>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-item active">
+                <div class="step-circle">2</div>
+                <span>Checkout</span>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-item">
+                <div class="step-circle">3</div>
+                <span>Payment</span>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-item">
+                <div class="step-circle">4</div>
+                <span>Track Order</span>
+            </div>
+        </div>
+
+        <div class="layout">
+            <!-- DELIVERY FORM -->
+            <div class="card">
+                <h2><span>📍</span> Delivery Information</h2>
+                <form id="checkoutForm" onsubmit="event.preventDefault(); goToPayment();">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="custName" class="form-control" placeholder="Rahul Sharma" value="{{ current_user.name if current_user else 'Rahul Sharma' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="custPhone" class="form-control" placeholder="9876543210" value="{{ current_user.phone if current_user else '9876543210' }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>City Location Node (For Dijkstra Routing)</label>
+                        <select id="custLocation" class="form-control" required>
+                            {% for node in ['Bandra', 'Dadar', 'Andheri', 'Kurla', 'BKC', 'Ghatkopar', 'Powai', 'Goregaon', 'Thane'] %}
+                                <option value="{{ node }}" {{ 'selected' if ((current_user.city if current_user else 'Dadar') == node) else '' }}>{{ node }}</option>
+                            {% endfor %}
+                        </select>
+                        <small style="color:var(--muted); font-size:11px; margin-top:4px; display:block;">Our Dijkstra shortest-path algorithm matches this node with real network vertices.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Complete Street Address / Landmark</label>
+                        <textarea id="custAddress" class="form-control" rows="3" placeholder="Apartment / Flat number, Building, Street, Landmark" required>{{ current_user.address if current_user else 'Flat 402, Sea View Apartments, Shivaji Park, Dadar West' }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Delivery Instructions (Optional)</label>
+                        <input type="text" id="custNotes" class="form-control" placeholder="e.g. Please leave at door / Call on arrival">
+                    </div>
+
+                    <button type="submit" class="btn-proceed">
+                        <span>Proceed to Payment 💳 →</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- ORDER SUMMARY -->
+            <div class="card">
+                <h2><span>🛒</span> Order Summary</h2>
+                <div id="orderItemsContainer" style="margin-bottom:15px; max-height:280px; overflow-y:auto;">
+                    <!-- Injected by JS -->
+                </div>
+
+                <div class="summary-item">
+                    <span>Item Subtotal</span>
+                    <span>₹<span id="subtotalText">0</span></span>
+                </div>
+                <div class="summary-item">
+                    <span>Delivery Fee</span>
+                    <span>₹5</span>
+                </div>
+                <div class="summary-item">
+                    <span>Platform Fee</span>
+                    <span>₹2</span>
+                </div>
+                <div class="summary-item total">
+                    <span>Total Amount</span>
+                    <span style="color:var(--orange);">₹<span id="totalText">0</span></span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FLOATING WHATSAPP -->
+    <a href="https://wa.me/{{ whatsapp_number }}?text=Hi%20QuickBite%20Support,%20I%20have%20a%20question%20about%20my%20checkout." target="_blank" class="floating-whatsapp-btn" title="Chat with QuickBite Support on WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+        <span>WhatsApp Support</span>
+    </a>
+
+    <!-- UNIVERSAL FOOTER -->
+    <footer class="qb-footer">
+        <div class="qb-footer-container">
+            <div class="qb-footer-col">
+                <h4>QuickBite Dispatch</h4>
+                <p>High-performance graph-based food delivery dispatch engine powered by Dijkstra shortest path routing and Min-Heap priority rider matching.</p>
+                <div class="qb-footer-badge">🟢 Dispatch Engine Active</div>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Navigation</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/orders">My Orders</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/checkout">Checkout</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Customer Care</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/help">Help & Support</a></li>
+                    <li><a href="/refunds">Refund Status</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Policies</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/refund-policy">Refund & Cancellation Policy</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="qb-footer-bottom">
+            <div>© {{ current_year }} QuickBite Technologies Inc. All rights reserved.</div>
+            <div>Dijkstra Shortest Path Dispatch • Min-Heap Rider Allocation</div>
+        </div>
+    </footer>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem("quickbite_cart")) || [];
+
+        function renderCartSummary() {
+            const container = document.getElementById('orderItemsContainer');
+            if (cart.length === 0) {
+                container.innerHTML = `<div style="color:var(--muted); font-size:13px; text-align:center; padding:20px 0;">Your cart is empty. <br><a href='/' style='color:var(--orange); font-weight:700;'>Browse Restaurants</a></div>`;
+                document.getElementById('subtotalText').innerText = 0;
+                document.getElementById('totalText').innerText = 0;
+                return;
+            }
+
+            let subtotal = 0;
+            container.innerHTML = cart.map(item => {
+                const qty = Number(item.quantity) || 1;
+                const price = Number(item.price) || 0;
+                const itemTotal = price * qty;
+                subtotal += itemTotal;
+                return `
+                    <div class="cart-item-row">
+                        <div>
+                            <strong>${item.name}</strong>
+                            <div style="font-size:12px; color:var(--muted);">₹${price} × ${qty}</div>
+                        </div>
+                        <div style="font-weight:700;">₹${itemTotal}</div>
+                    </div>
+                `;
+            }).join('');
+
+            const total = subtotal + 5 + 2;
+            document.getElementById('subtotalText').innerText = subtotal;
+            document.getElementById('totalText').innerText = total;
+        }
+
+        function goToPayment() {
+            if (cart.length === 0) {
+                alert("Your cart is empty! Please add delicious food items before proceeding.");
+                window.location.href = "/";
+                return;
+            }
+
+            const customer_name = document.getElementById('custName').value.trim();
+            const customer_location = document.getElementById('custLocation').value;
+            const address = document.getElementById('custAddress').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const notes = document.getElementById('custNotes').value.trim();
+
+            if (!customer_name || !address) {
+                alert("Please fill in your name and delivery address.");
+                return;
+            }
+
+            // Save checkout details for payment page
+            localStorage.setItem("quickbite_checkout", JSON.stringify({
+                customer_name,
+                customer_location,
+                address,
+                phone,
+                notes
+            }));
+
+            window.location.href = "/payment";
+        }
+
+        renderCartSummary();
+
+        function toggleUserDropdown(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.toggle('show');
+        }
+        window.addEventListener('click', function() {
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.remove('show');
+        });
+    </script>
+</body>
+</html>

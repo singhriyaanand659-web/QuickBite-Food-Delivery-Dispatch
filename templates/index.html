@@ -1,0 +1,2685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>QuickBite — Food Delivery</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        /* =====================================================
+           QUICKBITE HOMEPAGE
+        ===================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family:
+                Inter,
+                ui-sans-serif,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            background: #f8f8f8;
+            color: #171717;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .qb-navbar {
+
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            height: 72px;
+
+            display: flex;
+            align-items: center;
+
+            background: white;
+
+            border-bottom:
+                1px solid #eeeeee;
+
+            padding:
+                0 5%;
+
+        }
+
+
+        .qb-logo {
+
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            font-size: 25px;
+            font-weight: 900;
+
+            color: #111;
+
+        }
+
+
+        .qb-logo-mark {
+
+            width: 38px;
+            height: 38px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 12px;
+
+            background: #ff5a1f;
+
+            color: white;
+
+            font-size: 21px;
+
+        }
+
+
+        .qb-nav {
+
+            display: flex;
+            align-items: center;
+
+            gap: 30px;
+
+            margin-left: 50px;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            color: #555;
+
+        }
+
+
+        .qb-nav a:hover {
+            color: #ff5a1f;
+        }
+
+
+        .qb-nav-right {
+
+            margin-left: auto;
+
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+        }
+
+
+        .location-button {
+
+            display: flex;
+            align-items: center;
+
+            gap: 7px;
+
+            padding:
+                10px 14px;
+
+            border:
+                1px solid #e5e5e5;
+
+            border-radius: 10px;
+
+            background: white;
+
+            font-size: 13px;
+            font-weight: 600;
+
+        }
+
+
+        .nav-cart {
+
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+            padding:
+                10px 15px;
+
+            border-radius: 10px;
+
+            background: #ff5a1f;
+
+            color: white;
+
+            font-size: 13px;
+            font-weight: 800;
+
+        }
+
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+
+            position: relative;
+
+            min-height: 470px;
+
+            display: flex;
+            align-items: center;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff4ee,
+                    #ffffff
+                );
+
+            padding:
+                60px 7%;
+
+        }
+
+
+        .hero-content {
+
+            width: 55%;
+
+            position: relative;
+            z-index: 2;
+
+        }
+
+
+        .hero-badge {
+
+            display: inline-flex;
+
+            padding:
+                8px 13px;
+
+            border-radius: 30px;
+
+            background: #fff0e8;
+
+            color: #ff5a1f;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .hero h1 {
+
+            margin: 0;
+
+            max-width: 700px;
+
+            font-size:
+                clamp(
+                    42px,
+                    6vw,
+                    72px
+                );
+
+            line-height: .98;
+
+            letter-spacing:
+                -3px;
+
+            font-weight: 900;
+
+        }
+
+
+        .hero h1 span {
+            color: #ff5a1f;
+        }
+
+
+        .hero-description {
+
+            max-width: 550px;
+
+            margin-top: 20px;
+
+            color: #666;
+
+            font-size: 16px;
+
+            line-height: 1.6;
+
+        }
+
+
+        .hero-actions {
+
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 28px;
+
+        }
+
+
+        .primary-button {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            padding:
+                14px 22px;
+
+            border-radius: 12px;
+
+            background: #ff5a1f;
+
+            color: white;
+
+            border: none;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition:
+                transform .2s,
+                box-shadow .2s;
+
+        }
+
+
+        .primary-button:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 10px 25px
+                rgba(255,90,31,.22);
+
+        }
+
+
+        .secondary-button {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding:
+                14px 22px;
+
+            border-radius: 12px;
+
+            background: white;
+
+            border:
+                1px solid #ddd;
+
+            font-weight: 800;
+
+        }
+
+
+        .hero-visual {
+
+            position: absolute;
+
+            right: 5%;
+
+            width: 430px;
+            height: 430px;
+
+            display: grid;
+            place-items: center;
+
+        }
+
+
+        .food-circle {
+
+            width: 360px;
+            height: 360px;
+
+            border-radius: 50%;
+
+            display: grid;
+            place-items: center;
+
+            background:
+                radial-gradient(
+                    circle,
+                    #ffdfcf,
+                    #ffb18d
+                );
+
+            font-size: 150px;
+
+            box-shadow:
+                0 30px 80px
+                rgba(255,90,31,.15);
+
+        }
+
+
+        .floating-card {
+
+            position: absolute;
+
+            background: white;
+
+            padding:
+                13px 16px;
+
+            border-radius: 13px;
+
+            box-shadow:
+                0 12px 35px
+                rgba(0,0,0,.12);
+
+            font-size: 12px;
+
+            font-weight: 800;
+
+        }
+
+
+        .floating-card.one {
+
+            top: 60px;
+            right: 0;
+
+        }
+
+
+        .floating-card.two {
+
+            bottom: 65px;
+            left: 5px;
+
+        }
+
+
+        /* =====================================================
+           SEARCH
+        ===================================================== */
+
+        .search-section {
+
+            position: relative;
+
+            margin-top: -25px;
+
+            z-index: 10;
+
+            padding:
+                0 7%;
+
+        }
+
+
+        .search-box {
+
+            max-width: 900px;
+
+            margin: auto;
+
+            background: white;
+
+            border-radius: 16px;
+
+            padding: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            box-shadow:
+                0 12px 40px
+                rgba(0,0,0,.1);
+
+        }
+
+
+        .search-icon {
+
+            padding-left: 14px;
+
+            font-size: 20px;
+
+        }
+
+
+        .search-box input {
+
+            flex: 1;
+
+            border: none;
+
+            outline: none;
+
+            padding:
+                15px 5px;
+
+            font-size: 14px;
+
+        }
+
+
+        .search-button {
+
+            border: none;
+
+            border-radius: 11px;
+
+            padding:
+                13px 20px;
+
+            background: #ff5a1f;
+
+            color: white;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+        }
+
+
+        /* =====================================================
+           MAIN CONTENT
+        ===================================================== */
+
+        .qb-container {
+
+            width:
+                min(
+                    1200px,
+                    90%
+                );
+
+            margin: auto;
+
+            padding:
+                75px 0;
+
+        }
+
+
+        .section-title {
+
+            display: flex;
+
+            align-items: flex-end;
+
+            justify-content:
+                space-between;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .section-title h2 {
+
+            margin: 0;
+
+            font-size: 30px;
+
+            letter-spacing:
+                -1px;
+
+        }
+
+
+        .section-title p {
+
+            margin:
+                7px 0 0;
+
+            color: #777;
+
+            font-size: 13px;
+
+        }
+
+
+        .view-all {
+
+            color: #ff5a1f;
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+        }
+
+
+        /* =====================================================
+           CATEGORIES
+        ===================================================== */
+
+        .categories {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    6,
+                    1fr
+                );
+
+            gap: 15px;
+
+            margin-bottom: 65px;
+
+        }
+
+
+        .category {
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            min-height: 125px;
+
+            border-radius: 16px;
+
+            background: white;
+
+            border:
+                1px solid #eeeeee;
+
+            transition:
+                transform .2s,
+                border-color .2s;
+
+        }
+
+
+        .category:hover {
+
+            transform:
+                translateY(-4px);
+
+            border-color:
+                #ffb08c;
+
+        }
+
+
+        .category-icon {
+
+            width: 55px;
+            height: 55px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 50%;
+
+            background: #fff3ed;
+
+            font-size: 28px;
+
+        }
+
+
+        .category span {
+
+            font-size: 12px;
+
+            font-weight: 800;
+
+        }
+
+
+        /* =====================================================
+           RESTAURANTS
+        ===================================================== */
+
+        .restaurant-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    3,
+                    1fr
+                );
+
+            gap: 20px;
+
+        }
+
+
+        .restaurant-card {
+
+            overflow: hidden;
+
+            background: white;
+
+            border:
+                1px solid #eeeeee;
+
+            border-radius: 17px;
+
+            transition:
+                transform .2s,
+                box-shadow .2s;
+
+        }
+
+
+        .restaurant-card:hover {
+
+            transform:
+                translateY(-5px);
+
+            box-shadow:
+                0 18px 40px
+                rgba(0,0,0,.08);
+
+        }
+
+
+        .restaurant-image {
+
+            height: 190px;
+
+            display: grid;
+            place-items: center;
+
+            font-size: 85px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff0e7,
+                    #ffe0d0
+                );
+
+        }
+
+
+        .restaurant-content {
+
+            padding: 18px;
+
+        }
+
+
+        .restaurant-top {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+
+        }
+
+
+        .restaurant-name {
+
+            font-size: 17px;
+
+            font-weight: 900;
+
+        }
+
+
+        .rating {
+
+            padding:
+                5px 8px;
+
+            border-radius: 7px;
+
+            background: #eaf8ee;
+
+            color: #16833b;
+
+            font-size: 11px;
+
+            font-weight: 900;
+
+        }
+
+
+        .restaurant-meta {
+
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 8px;
+
+            color: #777;
+
+            font-size: 12px;
+
+        }
+
+
+        .restaurant-tags {
+
+            display: flex;
+
+            gap: 7px;
+
+            margin-top: 13px;
+
+        }
+
+
+        .tag {
+
+            padding:
+                5px 8px;
+
+            border-radius: 6px;
+
+            background: #f5f5f5;
+
+            color: #666;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+        }
+
+
+        .order-button {
+
+            display: block;
+
+            width: 100%;
+
+            margin-top: 15px;
+
+            text-align: center;
+
+            padding:
+                11px;
+
+            border-radius: 10px;
+
+            background: #ff5a1f;
+
+            color: white;
+
+            font-size: 12px;
+
+            font-weight: 800;
+
+        }
+
+
+        /* =====================================================
+           DISPATCH SECTION
+        ===================================================== */
+
+        .dispatch-section {
+
+            margin-top: 75px;
+
+            padding:
+                45px;
+
+            border-radius: 25px;
+
+            background:
+                #151515;
+
+            color: white;
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+
+        .dispatch-section::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 350px;
+            height: 350px;
+
+            right: -120px;
+            top: -150px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(
+                    255,
+                    90,
+                    31,
+                    .16
+                );
+
+        }
+
+
+        .dispatch-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1.3fr 1fr;
+
+            gap: 50px;
+
+            align-items: center;
+
+        }
+
+
+        .dispatch-section h2 {
+
+            margin: 0;
+
+            font-size: 38px;
+
+            letter-spacing:
+                -1.5px;
+
+        }
+
+
+        .dispatch-section p {
+
+            color: #aaa;
+
+            line-height: 1.7;
+
+            font-size: 14px;
+
+        }
+
+
+        .dispatch-features {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2,1fr);
+
+            gap: 12px;
+
+            margin-top: 25px;
+
+        }
+
+
+        .dispatch-feature {
+
+            padding:
+                15px;
+
+            border:
+                1px solid #333;
+
+            border-radius: 12px;
+
+            background: #1e1e1e;
+
+        }
+
+
+        .dispatch-feature strong {
+
+            display: block;
+
+            color: white;
+
+            font-size: 13px;
+
+        }
+
+
+        .dispatch-feature span {
+
+            display: block;
+
+            margin-top: 5px;
+
+            color: #999;
+
+            font-size: 11px;
+
+        }
+
+
+        .dispatch-visual {
+
+            display: grid;
+
+            place-items: center;
+
+        }
+
+
+        .dispatch-map {
+
+            width: 310px;
+
+            height: 250px;
+
+            border-radius: 18px;
+
+            background:
+                #202020;
+
+            border:
+                1px solid #333;
+
+            display: grid;
+
+            place-items: center;
+
+            font-size: 90px;
+
+        }
+
+
+        /* =====================================================
+           HOW IT WORKS
+        ===================================================== */
+
+        .steps {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    4,
+                    1fr
+                );
+
+            gap: 15px;
+
+        }
+
+
+        .step {
+
+            padding:
+                25px;
+
+            border-radius: 16px;
+
+            background: white;
+
+            border:
+                1px solid #eeeeee;
+
+        }
+
+
+        .step-number {
+
+            color: #ff5a1f;
+
+            font-size: 11px;
+
+            font-weight: 900;
+
+            letter-spacing: 1px;
+
+        }
+
+
+        .step-icon {
+
+            font-size: 30px;
+
+            margin:
+                22px 0 13px;
+
+        }
+
+
+        .step h3 {
+
+            margin: 0;
+
+            font-size: 16px;
+
+        }
+
+
+        .step p {
+
+            color: #777;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+
+        }
+
+
+        /* =====================================================
+           TRACKING CTA
+        ===================================================== */
+
+        .tracking-cta {
+
+            margin-top: 65px;
+
+            padding:
+                40px;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff0e7,
+                    #ffffff
+                );
+
+            border:
+                1px solid #ffd9c8;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            gap: 30px;
+
+        }
+
+
+        .tracking-cta h2 {
+
+            margin: 0;
+
+            font-size: 28px;
+
+        }
+
+
+        .tracking-cta p {
+
+            margin:
+                8px 0 0;
+
+            color: #777;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .qb-footer {
+
+            margin-top: 40px;
+
+            padding:
+                45px 7%;
+
+            background: #111;
+
+            color: white;
+
+        }
+
+
+        .footer-grid {
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                2fr 1fr 1fr 1fr;
+
+            gap: 40px;
+
+        }
+
+
+        .footer-brand p {
+
+            color: #999;
+
+            max-width: 300px;
+
+            font-size: 12px;
+
+            line-height: 1.7;
+
+        }
+
+
+        .footer-column h4 {
+
+            margin: 0 0 15px;
+
+            font-size: 12px;
+
+        }
+
+
+        .footer-column a {
+
+            display: block;
+
+            margin-bottom: 9px;
+
+            color: #999;
+
+            font-size: 11px;
+
+        }
+
+
+        .footer-column a:hover {
+
+            color: white;
+
+        }
+
+
+        .footer-bottom {
+
+            max-width: 1200px;
+
+            margin:
+                35px auto 0;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid #2b2b2b;
+
+            color: #777;
+
+            font-size: 10px;
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1000px) {
+
+            .hero-content {
+                width: 70%;
+            }
+
+            .hero-visual {
+                opacity: .25;
+            }
+
+            .categories {
+                grid-template-columns:
+                    repeat(3,1fr);
+            }
+
+            .restaurant-grid {
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+            .dispatch-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .qb-nav {
+                display: none;
+            }
+
+            .location-button {
+                display: none;
+            }
+
+            .hero {
+                padding:
+                    50px 5%;
+            }
+
+            .hero-content {
+                width: 100%;
+            }
+
+            .hero h1 {
+                font-size: 46px;
+            }
+
+            .hero-visual {
+                display: none;
+            }
+
+            .categories {
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+            .restaurant-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+            .tracking-cta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .footer-grid {
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 450px) {
+
+            .nav-cart span {
+                display: none;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .dispatch-features {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
+<nav class="qb-navbar">
+
+
+    <a
+        href="{{ url_for('dashboard') }}"
+        class="qb-logo"
+    >
+
+        <div class="qb-logo-mark">
+            ⚡
+        </div>
+
+        QuickBite
+
+    </a>
+
+
+    <div class="qb-nav">
+
+        <a href="#restaurants">
+            Restaurants
+        </a>
+
+        <a href="{{ url_for('faq_page') }}">
+            FAQ
+        </a>
+
+        <a href="{{ url_for('help_page') }}">
+            Help & Support
+        </a>
+
+        {% if current_user %}
+            <a href="{{ url_for('profile_page') }}" style="color:var(--orange); font-weight:800;">
+                👤 My Profile
+            </a>
+        {% endif %}
+
+        <a href="#dispatch">
+            Dispatch Engine
+        </a>
+
+    </div>
+
+
+    <div class="qb-nav-right">
+
+
+        <div class="location-button">
+
+            📍
+
+            <span>
+                Dadar, Mumbai
+            </span>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('orders_page') }}"
+            class="nav-cart"
+        >
+
+            📦
+
+            <span>
+                My Orders
+            </span>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('cart') }}"
+            class="nav-cart"
+        >
+
+            🛒
+
+            <span>
+                Cart
+            </span>
+
+        </a>
+
+        {% if current_user %}
+            <div class="user-nav-wrapper">
+                <button class="user-avatar-btn" onclick="toggleUserDropdown(event)">
+                    <span>{{ current_user.avatar or '👨‍💼' }}</span>
+                    <span>{{ current_user.name.split(' ')[0] }}</span>
+                    <span style="font-size:10px; color:#94a3b8;">▼</span>
+                </button>
+                <div id="userDropdownMenu" class="user-dropdown-menu">
+                    <div class="user-dropdown-header">
+                        <strong>{{ current_user.name }}</strong>
+                        <span>{{ current_user.email }}</span>
+                    </div>
+                    <a href="{{ url_for('profile_page') }}" class="user-dropdown-link">👤 My Profile</a>
+                    <a href="{{ url_for('orders_page') }}" class="user-dropdown-link">📦 My Orders</a>
+                    <a href="{{ url_for('cart') }}" class="user-dropdown-link">🛒 View Cart</a>
+                    <a href="{{ url_for('logout') }}" class="user-dropdown-link logout">🚪 Log Out</a>
+                </div>
+            </div>
+        {% else %}
+            <a href="{{ url_for('login_page') }}" class="nav-signin-btn">
+                <span>👤 Sign In</span>
+            </a>
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+
+    <div class="hero-content">
+
+
+        <div class="hero-badge">
+
+            ⚡ FAST DELIVERY · SMART DISPATCH
+
+        </div>
+
+
+        <h1>
+
+            Your food.
+
+            <br>
+
+            <span>
+                Your way.
+            </span>
+
+            Delivered.
+
+        </h1>
+
+
+        <p class="hero-description">
+
+            Discover your favourite restaurants,
+            order delicious food and watch our
+            intelligent dispatch system find the
+            best rider and route for your delivery.
+
+        </p>
+
+
+        <div class="hero-actions">
+
+
+            <a
+                href="#restaurants"
+                class="primary-button"
+            >
+
+                🍔
+
+                Order Food
+
+            </a>
+
+
+            <a
+                href="{{ url_for('orders_page') }}"
+                class="secondary-button"
+            >
+
+                Track My Orders
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+    <div class="hero-visual">
+
+
+        <div class="food-circle">
+            🍔
+        </div>
+
+
+        <div class="floating-card one">
+
+            ⭐ 4.8 Rating
+
+        </div>
+
+
+        <div class="floating-card two">
+
+            🛵 Fast Delivery
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     SEARCH
+========================================================= -->
+
+<section class="search-section">
+
+
+    <div class="search-box">
+
+
+        <div class="search-icon">
+            🔍
+        </div>
+
+
+        <input
+            id="restaurantSearch"
+            type="text"
+            placeholder="Search for restaurants, food or cuisines..."
+        >
+
+
+        <button
+            class="search-button"
+            onclick="searchRestaurants()"
+        >
+
+            Search
+
+        </button>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="qb-container">
+
+
+
+<!-- =========================================================
+     CATEGORIES
+========================================================= -->
+
+<section id="categories">
+
+
+    <div class="section-title">
+
+
+        <div>
+
+            <h2>
+                What's on your mind?
+            </h2>
+
+            <p>
+                Choose from your favourite cuisines
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="categories">
+
+
+        <a
+            href="#restaurants"
+            class="category"
+        >
+
+            <div class="category-icon">
+                🍕
+            </div>
+
+            <span>
+                Pizza
+            </span>
+
+        </a>
+
+
+        <a
+            href="#restaurants"
+            class="category"
+        >
+
+            <div class="category-icon">
+                🍔
+            </div>
+
+            <span>
+                Burgers
+            </span>
+
+        </a>
+
+
+        <a
+            href="#restaurants"
+            class="category"
+        >
+
+            <div class="category-icon">
+                🍜
+            </div>
+
+            <span>
+                Asian
+            </span>
+
+        </a>
+
+
+        <a
+            href="#restaurants"
+            class="category"
+        >
+
+            <div class="category-icon">
+                🍛
+            </div>
+
+            <span>
+                Indian
+            </span>
+
+        </a>
+
+
+        <a
+            href="#restaurants"
+            class="category"
+        >
+
+            <div class="category-icon">
+                🌯
+            </div>
+
+            <span>
+                Wraps
+            </span>
+
+        </a>
+
+
+        <a
+            href="#restaurants"
+            class="category"
+        >
+
+            <div class="category-icon">
+                🍰
+            </div>
+
+            <span>
+                Desserts
+            </span>
+
+        </a>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     RESTAURANTS
+========================================================= -->
+
+<section id="restaurants">
+
+
+    <div class="section-title">
+
+
+        <div>
+
+            <h2>
+                Top restaurants near you
+            </h2>
+
+            <p>
+                Popular picks based on delivery speed and ratings
+            </p>
+
+        </div>
+
+
+        <a
+            href="#restaurants"
+            class="view-all"
+        >
+
+            View all →
+
+        </a>
+
+
+    </div>
+
+
+
+    <div
+        class="restaurant-grid"
+        id="restaurantGrid"
+    >
+
+
+        <!-- RESTAURANT 1 -->
+
+        <article
+            class="restaurant-card"
+            data-name="Spice Kitchen"
+            data-food="indian biryani curry"
+        >
+
+
+            <div class="restaurant-image">
+                🍛
+            </div>
+
+
+            <div class="restaurant-content">
+
+
+                <div class="restaurant-top">
+
+
+                    <div class="restaurant-name">
+
+                        Spice Kitchen
+
+                    </div>
+
+
+                    <div class="rating">
+
+                        ★ 4.8
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="restaurant-meta">
+
+                    <span>
+                        Indian
+                    </span>
+
+                    <span>
+                        •
+                    </span>
+
+                    <span>
+                        20–25 min
+                    </span>
+
+                </div>
+
+
+                <div class="restaurant-tags">
+
+                    <span class="tag">
+                        Biryani
+                    </span>
+
+                    <span class="tag">
+                        North Indian
+                    </span>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('restaurant_page', restaurant_id='REST001') }}"
+                    class="order-button"
+                >
+
+                    View Menu
+
+                </a>
+
+
+            </div>
+
+
+        </article>
+
+
+
+        <!-- RESTAURANT 2 -->
+
+        <article
+            class="restaurant-card"
+            data-name="Burger House"
+            data-food="burger fries american"
+        >
+
+
+            <div class="restaurant-image">
+                🍔
+            </div>
+
+
+            <div class="restaurant-content">
+
+
+                <div class="restaurant-top">
+
+
+                    <div class="restaurant-name">
+
+                        Burger House
+
+                    </div>
+
+
+                    <div class="rating">
+
+                        ★ 4.7
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="restaurant-meta">
+
+                    <span>
+                        American
+                    </span>
+
+                    <span>
+                        •
+                    </span>
+
+                    <span>
+                        25–30 min
+                    </span>
+
+                </div>
+
+
+                <div class="restaurant-tags">
+
+                    <span class="tag">
+                        Burgers
+                    </span>
+
+                    <span class="tag">
+                        Fries
+                    </span>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('restaurant_page', restaurant_id='REST002') }}"
+                    class="order-button"
+                >
+
+                    View Menu
+
+                </a>
+
+
+            </div>
+
+
+        </article>
+
+
+
+        <!-- RESTAURANT 3 -->
+
+        <article
+            class="restaurant-card"
+            data-name="Pizza Point"
+            data-food="pizza italian pasta"
+        >
+
+
+            <div class="restaurant-image">
+                🍕
+            </div>
+
+
+            <div class="restaurant-content">
+
+
+                <div class="restaurant-top">
+
+
+                    <div class="restaurant-name">
+
+                        Pizza Point
+
+                    </div>
+
+
+                    <div class="rating">
+
+                        ★ 4.6
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="restaurant-meta">
+
+                    <span>
+                        Italian
+                    </span>
+
+                    <span>
+                        •
+                    </span>
+
+                    <span>
+                        25–35 min
+                    </span>
+
+                </div>
+
+
+                <div class="restaurant-tags">
+
+                    <span class="tag">
+                        Pizza
+                    </span>
+
+                    <span class="tag">
+                        Pasta
+                    </span>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('restaurant_page', restaurant_id='REST003') }}"
+                    class="order-button"
+                >
+
+                    View Menu
+
+                </a>
+
+
+            </div>
+
+
+        </article>
+
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     DISPATCH SYSTEM
+========================================================= -->
+
+<section
+    id="dispatch"
+    class="dispatch-section"
+>
+
+
+    <div class="dispatch-grid">
+
+
+        <div>
+
+
+            <div class="hero-badge">
+
+                DATA STRUCTURES POWERED
+
+            </div>
+
+
+            <h2>
+
+                Your order doesn't
+                just get delivered.
+
+                <br>
+
+                It gets intelligently
+                <span style="color:#ff6a32;">
+                    dispatched.
+                </span>
+
+            </h2>
+
+
+            <p>
+
+                QuickBite uses data structures and
+                algorithms behind the scenes to
+                select riders and calculate efficient
+                delivery routes.
+
+            </p>
+
+
+            <div class="dispatch-features">
+
+
+                <div class="dispatch-feature">
+
+                    <strong>
+                        🗺️ Graph
+                    </strong>
+
+                    <span>
+                        Represents the road network
+                    </span>
+
+                </div>
+
+
+                <div class="dispatch-feature">
+
+                    <strong>
+                        ⚡ Dijkstra
+                    </strong>
+
+                    <span>
+                        Finds shortest delivery routes
+                    </span>
+
+                </div>
+
+
+                <div class="dispatch-feature">
+
+                    <strong>
+                        🏆 Min Heap
+                    </strong>
+
+                    <span>
+                        Selects the best rider
+                    </span>
+
+                </div>
+
+
+                <div class="dispatch-feature">
+
+                    <strong>
+                        📦 Queue
+                    </strong>
+
+                    <span>
+                        Processes incoming orders
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="dispatch-visual">
+
+            <div class="dispatch-map">
+
+                🛵
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     HOW IT WORKS
+========================================================= -->
+
+<section
+    id="how-it-works"
+    style="margin-top:75px;"
+>
+
+
+    <div class="section-title">
+
+
+        <div>
+
+            <h2>
+                How QuickBite works
+            </h2>
+
+            <p>
+                From your tap to your doorstep
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="steps">
+
+
+        <div class="step">
+
+
+            <div class="step-number">
+                STEP 01
+            </div>
+
+
+            <div class="step-icon">
+                🍔
+            </div>
+
+
+            <h3>
+                Choose your food
+            </h3>
+
+
+            <p>
+                Browse restaurants and add
+                your favourite dishes to the cart.
+            </p>
+
+
+        </div>
+
+
+
+        <div class="step">
+
+
+            <div class="step-number">
+                STEP 02
+            </div>
+
+
+            <div class="step-icon">
+                📦
+            </div>
+
+
+            <h3>
+                Place your order
+            </h3>
+
+
+            <p>
+                Your order enters our dispatch
+                queue for processing.
+            </p>
+
+
+        </div>
+
+
+
+        <div class="step">
+
+
+            <div class="step-number">
+                STEP 03
+            </div>
+
+
+            <div class="step-icon">
+                🛵
+            </div>
+
+
+            <h3>
+                Rider assigned
+            </h3>
+
+
+            <p>
+                A Min-Heap helps select the
+                most suitable available rider.
+            </p>
+
+
+        </div>
+
+
+
+        <div class="step">
+
+
+            <div class="step-number">
+                STEP 04
+            </div>
+
+
+            <div class="step-icon">
+                📍
+            </div>
+
+
+            <h3>
+                Track delivery
+            </h3>
+
+
+            <p>
+                Dijkstra calculates the route
+                and your order can be tracked.
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     TRACKING
+========================================================= -->
+
+<section class="tracking-cta">
+
+
+    <div>
+
+
+        <h2>
+            Already ordered?
+        </h2>
+
+
+        <p>
+            Check your active orders and track
+            your rider in real time.
+        </p>
+
+
+    </div>
+
+
+    <a
+        href="{{ url_for('orders_page') }}"
+        class="primary-button"
+    >
+
+        🚴 Track Order
+
+    </a>
+
+
+</section>
+
+
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="qb-footer">
+
+
+    <div class="footer-grid">
+
+
+        <div class="footer-brand">
+
+
+            <div class="qb-logo">
+
+                <div class="qb-logo-mark">
+                    ⚡
+                </div>
+
+                QuickBite
+
+            </div>
+
+
+            <p>
+
+                A data-structures-powered food
+                delivery and rider dispatch
+                system built as a case study.
+
+            </p>
+
+
+        </div>
+
+
+
+        <div class="footer-column">
+
+
+            <h4>
+                QuickBite
+            </h4>
+
+
+            <a href="#restaurants">
+                Restaurants
+            </a>
+
+
+            <a href="#categories">
+                Categories
+            </a>
+
+
+            <a href="#how-it-works">
+                How it works
+            </a>
+
+
+        </div>
+
+
+
+        <div class="footer-column">
+
+            <h4>
+                Customer Care
+            </h4>
+
+            <a href="{{ url_for('faq_page') }}">
+                FAQ
+            </a>
+
+            <a href="{{ url_for('help_page') }}">
+                Help & Support
+            </a>
+
+            <a href="{{ url_for('refunds_overview_page') }}">
+                Refund Status
+            </a>
+
+            <a href="{{ url_for('contact_page') }}">
+                Contact Us
+            </a>
+
+        </div>
+
+        <div class="footer-column">
+
+            <h4>
+                Orders & Cart
+            </h4>
+
+            <a href="{{ url_for('orders_page') }}">
+                My Orders
+            </a>
+
+            <a href="{{ url_for('cart') }}">
+                Cart
+            </a>
+
+            <a href="{{ url_for('checkout') }}">
+                Checkout
+            </a>
+
+        </div>
+
+        <div class="footer-column">
+
+            <h4>
+                Policies & Legal
+            </h4>
+
+            <a href="{{ url_for('refund_policy_page') }}">
+                Refund & Cancellation
+            </a>
+
+            <a href="{{ url_for('privacy_page') }}">
+                Privacy Policy
+            </a>
+
+            <a href="{{ url_for('terms_page') }}">
+                Terms & Conditions
+            </a>
+
+            <a href="{{ url_for('health') }}">
+                System Health
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+
+        <span>
+            © {{ current_year }} QuickBite Technologies Inc.
+        </span>
+
+        <span>
+            Dijkstra Shortest Path Dispatch · Min-Heap Priority Queue Rider Allocation
+        </span>
+
+    </div>
+
+</footer>
+
+<!-- FLOATING WHATSAPP -->
+<a href="https://wa.me/{{ whatsapp_number }}?text=Hi%20QuickBite%20Support,%20I%20have%20a%20question%20about%20ordering%20food." target="_blank" class="floating-whatsapp-btn" title="Chat with QuickBite Support on WhatsApp">
+    <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+    <span>WhatsApp Support</span>
+</a>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+
+    function searchRestaurants() {
+
+        const input =
+            document.getElementById(
+                "restaurantSearch"
+            );
+
+        const query =
+            input.value
+                .toLowerCase()
+                .trim();
+
+
+        const cards =
+            document.querySelectorAll(
+                ".restaurant-card"
+            );
+
+
+        cards.forEach(
+            function(card) {
+
+                const name =
+                    (
+                        card.dataset.name
+                        || ""
+                    ).toLowerCase();
+
+
+                const food =
+                    (
+                        card.dataset.food
+                        || ""
+                    ).toLowerCase();
+
+
+                if (
+                    !query
+                    ||
+                    name.includes(query)
+                    ||
+                    food.includes(query)
+                ) {
+
+                    card.style.display =
+                        "block";
+
+                } else {
+
+                    card.style.display =
+                        "none";
+
+                }
+
+            }
+        );
+
+    }
+
+
+
+    document
+        .getElementById(
+            "restaurantSearch"
+        )
+        .addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    searchRestaurants();
+
+                }
+
+            }
+        );
+
+
+    function toggleUserDropdown(e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        const menu = document.getElementById('userDropdownMenu');
+        if (menu) menu.classList.toggle('show');
+    }
+    window.addEventListener('click', function() {
+        const menu = document.getElementById('userDropdownMenu');
+        if (menu) menu.classList.remove('show');
+    });
+
+</script>
+
+
+</body>
+
+</html>

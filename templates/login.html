@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In & Register — QuickBite Delivery</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --orange: #ff5a1f;
+            --orange-hover: #ff4300;
+            --orange-glow: rgba(255, 90, 31, 0.35);
+            --dark: #090d16;
+            --dark-card: #111827;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --green: #10b981;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Top Brand Navigation */
+        .auth-top-nav {
+            height: 72px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .brand-logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: #0f172a;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.8px;
+        }
+        .brand-logo-badge {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #ff5a1f, #ff8a4c);
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 12px var(--orange-glow);
+        }
+        .nav-back-link {
+            text-decoration: none;
+            color: #475569;
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: #f1f5f9;
+            transition: all 0.2s;
+        }
+        .nav-back-link:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+            transform: translateX(-2px);
+        }
+
+        /* Split Screen Container */
+        .auth-page-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 5% 70px;
+            max-width: 1280px;
+            margin: 0 auto;
+            width: 100%;
+            gap: 60px;
+        }
+
+        /* Left Showcase Column */
+        .auth-showcase {
+            flex: 1;
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+        .showcase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff3ed;
+            color: var(--orange);
+            border: 1px solid #fed7aa;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            width: fit-content;
+        }
+        .showcase-title {
+            font-size: 42px;
+            font-weight: 900;
+            line-height: 1.15;
+            letter-spacing: -1.5px;
+            color: #0f172a;
+        }
+        .showcase-title span {
+            background: linear-gradient(135deg, #ff5a1f, #ff8a4c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .showcase-desc {
+            font-size: 16px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* Animated Live Dispatch Simulation Preview Card */
+        .live-preview-card {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            padding: 22px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        .live-preview-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #ff5a1f, #10b981, #3b82f6);
+        }
+        .preview-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .preview-pulse {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--green);
+            text-transform: uppercase;
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulseAnim 1.6s infinite;
+        }
+        @keyframes pulseAnim {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .route-preview-steps {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+        }
+        .route-node-pill {
+            background: white;
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            color: var(--orange);
+            font-weight: 800;
+        }
+
+        /* Perks list */
+        .showcase-perks {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .perk-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #334155;
+        }
+        .perk-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: #fff3ed;
+            color: var(--orange);
+            display: grid;
+            place-items: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        /* Right Auth Box */
+        .auth-card-wrapper {
+            flex: 1;
+            max-width: 480px;
+            width: 100%;
+        }
+        .auth-glass-card {
+            background: white;
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            padding: 38px 34px;
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.08);
+            position: relative;
+        }
+
+        /* Pill Tabs */
+        .auth-nav-tabs {
+            display: flex;
+            background: #f1f5f9;
+            border-radius: 16px;
+            padding: 5px;
+            margin-bottom: 26px;
+            position: relative;
+        }
+        .auth-nav-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            font-weight: 800;
+            color: #64748b;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 2;
+        }
+        .auth-nav-btn.active {
+            background: white;
+            color: var(--orange);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+        }
+
+        .auth-view-header {
+            margin-bottom: 22px;
+        }
+        .auth-view-header h2 {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.6px;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+        .auth-view-header p {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* Form Inputs */
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            color: #475569;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        .input-with-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-icon-prefix {
+            position: absolute;
+            left: 14px;
+            font-size: 16px;
+            color: #94a3b8;
+            pointer-events: none;
+        }
+        .form-field {
+            width: 100%;
+            padding: 13px 15px 13px 42px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            background: #f8fafc;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .form-field:focus {
+            background: white;
+            border-color: var(--orange);
+            box-shadow: 0 0 0 4px rgba(255, 90, 31, 0.12);
+        }
+        .input-btn-toggle {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #94a3b8;
+        }
+        .form-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .auth-extra-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            margin: 18px 0 22px;
+        }
+        .remember-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #475569;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .remember-checkbox input {
+            accent-color: var(--orange);
+            width: 16px;
+            height: 16px;
+        }
+        .forgot-link {
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+        .forgot-link:hover { text-decoration: underline; }
+
+        /* Submit Action Button */
+        .btn-submit-main {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff5a1f, #ff4300);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 20px var(--orange-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-submit-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(255, 90, 31, 0.45);
+        }
+        .btn-submit-main:active { transform: translateY(0); }
+
+        /* Quick Demo Accounts Area */
+        .demo-accounts-card {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--border);
+        }
+        .demo-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .demo-chips-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .demo-chip-btn {
+            background: #fff8f5;
+            border: 1px solid #ffd9c8;
+            border-radius: 10px;
+            padding: 8px 6px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #c2410c;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .demo-chip-btn span.emoji { font-size: 16px; }
+        .demo-chip-btn:hover {
+            background: #ffedd5;
+            border-color: #ff9858;
+            transform: translateY(-1px);
+        }
+
+        /* Alert Messages */
+        .status-alert {
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+        .alert-danger {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+        }
+        .alert-success {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #047857;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tab Views */
+        .auth-tab-view { display: none; }
+        .auth-tab-view.active { display: block; animation: fadeIn 0.25s ease; }
+
+        @media (max-width: 950px) {
+            .auth-page-wrapper { flex-direction: column; padding-top: 20px; }
+            .auth-showcase { text-align: center; align-items: center; }
+            .showcase-badge { margin: 0 auto; }
+            .showcase-title { font-size: 32px; }
+            .live-preview-card { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="auth-top-nav">
+        <a href="/" class="brand-logo">
+            <div class="brand-logo-badge">⚡</div>
+            <span>QuickBite</span>
+        </a>
+        <a href="/" class="nav-back-link">
+            <span>←</span> Back to Dashboard
+        </a>
+    </header>
+
+    <main class="auth-page-wrapper">
+        <!-- LEFT SHOWCASE -->
+        <section class="auth-showcase">
+            <div class="showcase-badge">
+                ⚡ GRAPH-BASED FOOD DISPATCH PLATFORM
+            </div>
+
+            <h1 class="showcase-title">
+                Lightning fast food. <br>
+                <span>Smarter dispatch.</span>
+            </h1>
+
+            <p class="showcase-desc">
+                Experience algorithmic delivery dispatch powered by Dijkstra shortest path routing and Min-Heap priority rider allocation.
+            </p>
+
+            <!-- LIVE SIMULATION ROUTE PREVIEW -->
+            <div class="live-preview-card">
+                <div class="preview-top">
+                    <div class="preview-pulse">
+                        <div class="pulse-dot"></div>
+                        <span>Live Dispatch Engine</span>
+                    </div>
+                    <span style="font-size:12px; font-weight:800; color:var(--orange);">ETA ~ 14 mins</span>
+                </div>
+                <div class="route-preview-steps">
+                    <span class="route-node-pill">🛵 Aarhus (Rider)</span>
+                    <span>→</span>
+                    <span class="route-node-pill">🍕 Bandra (Restaurant)</span>
+                    <span>→</span>
+                    <span class="route-node-pill">📍 Dadar (You)</span>
+                </div>
+            </div>
+
+            <div class="showcase-perks">
+                <div class="perk-item">
+                    <div class="perk-icon">🗺️</div>
+                    <span>Dijkstra Shortest Path Real-Time Routing</span>
+                </div>
+                <div class="perk-item">
+                    <div class="perk-icon">⚡</div>
+                    <span>Min-Heap Automated Nearest Rider Matching</span>
+                </div>
+                <div class="perk-item">
+                    <div class="perk-icon">🛡️</div>
+                    <span>Instant 3-Stage Automated Refund Tracking</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT AUTH CARD -->
+        <section class="auth-card-wrapper">
+            <div class="auth-glass-card">
+                <!-- TABS -->
+                <div class="auth-nav-tabs" id="authTabs">
+                    <button class="auth-nav-btn active" id="tabBtnLogin" onclick="switchAuthTab('login')">Sign In</button>
+                    <button class="auth-nav-btn" id="tabBtnSignup" onclick="switchAuthTab('signup')">Create Account</button>
+                </div>
+
+                <!-- ALERTS -->
+                <div class="status-alert alert-danger" id="authAlertError"></div>
+                <div class="status-alert alert-success" id="authAlertSuccess"></div>
+
+                <!-- TAB 1: SIGN IN -->
+                <div class="auth-tab-view active" id="viewLogin">
+                    <div class="auth-view-header">
+                        <h2>Welcome Back! 👋</h2>
+                        <p>Sign in to access your profile, active orders, and fast checkout.</p>
+                    </div>
+
+                    <form id="loginForm" onsubmit="event.preventDefault(); submitLogin();">
+                        <div class="input-group">
+                            <label>Email Address</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon-prefix">✉️</span>
+                                <input type="email" id="loginEmail" class="form-field" placeholder="rahul@quickbite.com" value="rahul@quickbite.com" required>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Password</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon-prefix">🔒</span>
+                                <input type="password" id="loginPassword" class="form-field" placeholder="••••••••" value="password123" required>
+                                <button type="button" class="input-btn-toggle" onclick="togglePassVisibility('loginPassword')">👁️</button>
+                            </div>
+                        </div>
+
+                        <div class="auth-extra-row">
+                            <label class="remember-checkbox">
+                                <input type="checkbox" id="rememberMe" checked>
+                                <span>Remember me</span>
+                            </label>
+                            <a href="javascript:void(0)" class="forgot-link" onclick="switchAuthTab('forgot')">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit" class="btn-submit-main" id="btnSubmitLogin">
+                            <span>Sign In to QuickBite 🚀</span>
+                        </button>
+                    </form>
+
+                    <!-- 1-CLICK DEMO LOGINS -->
+                    <div class="demo-accounts-card">
+                        <div class="demo-title">⚡ Instant 1-Click Demo Logins</div>
+                        <div class="demo-chips-grid">
+                            <button type="button" class="demo-chip-btn" onclick="quickFillLogin('rahul@quickbite.com', 'password123')">
+                                <span class="emoji">👨‍💼</span>
+                                <span>Rahul (Dadar)</span>
+                            </button>
+                            <button type="button" class="demo-chip-btn" onclick="quickFillLogin('priya@quickbite.com', 'password123')">
+                                <span class="emoji">👩‍🍳</span>
+                                <span>Priya (Bandra)</span>
+                            </button>
+                            <button type="button" class="demo-chip-btn" onclick="quickFillLogin('rohit@quickbite.com', 'password123')">
+                                <span class="emoji">🧑‍💻</span>
+                                <span>Rohit (Andheri)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: CREATE ACCOUNT -->
+                <div class="auth-tab-view" id="viewSignup">
+                    <div class="auth-view-header">
+                        <h2>Join QuickBite 🍕</h2>
+                        <p>Create your account and start ordering with instant smart dispatch.</p>
+                    </div>
+
+                    <form id="signupForm" onsubmit="event.preventDefault(); submitSignup();">
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon-prefix">👤</span>
+                                <input type="text" id="signupName" class="form-field" placeholder="e.g. Aryan Khan" required>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Email Address</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon-prefix">✉️</span>
+                                <input type="email" id="signupEmail" class="form-field" placeholder="aryan@example.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-2col">
+                            <div class="input-group">
+                                <label>Phone Number</label>
+                                <div class="input-with-icon">
+                                    <span class="input-icon-prefix">📱</span>
+                                    <input type="tel" id="signupPhone" class="form-field" placeholder="9876543210" required>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label>City Node (Graph)</label>
+                                <div class="input-with-icon">
+                                    <span class="input-icon-prefix">📍</span>
+                                    <select id="signupLocation" class="form-field" style="padding-left:42px;" required>
+                                        <option value="Bandra">Bandra</option>
+                                        <option value="Dadar" selected>Dadar</option>
+                                        <option value="Andheri">Andheri</option>
+                                        <option value="Kurla">Kurla</option>
+                                        <option value="BKC">BKC</option>
+                                        <option value="Ghatkopar">Ghatkopar</option>
+                                        <option value="Powai">Powai</option>
+                                        <option value="Goregaon">Goregaon</option>
+                                        <option value="Thane">Thane</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-2col">
+                            <div class="input-group">
+                                <label>Password</label>
+                                <div class="input-with-icon">
+                                    <span class="input-icon-prefix">🔒</span>
+                                    <input type="password" id="signupPassword" class="form-field" placeholder="Min 6 chars" minlength="6" required>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>Confirm</label>
+                                <div class="input-with-icon">
+                                    <span class="input-icon-prefix">🔒</span>
+                                    <input type="password" id="signupConfirmPassword" class="form-field" placeholder="Repeat" minlength="6" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit-main" id="btnSubmitSignup" style="margin-top:10px;">
+                            <span>Create Account & Log In ✨</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- TAB 3: FORGOT PASSWORD -->
+                <div class="auth-tab-view" id="viewForgot">
+                    <div class="auth-view-header">
+                        <h2>Reset Password 🔑</h2>
+                        <p>Enter your email to receive simulated password recovery instructions.</p>
+                    </div>
+
+                    <form id="forgotForm" onsubmit="event.preventDefault(); submitForgotPassword();">
+                        <div class="input-group">
+                            <label>Registered Email</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon-prefix">✉️</span>
+                                <input type="email" id="forgotEmail" class="form-field" placeholder="user@quickbite.com" value="rahul@quickbite.com" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit-main" id="btnSubmitForgot">
+                            <span>Send Recovery Link 📩</span>
+                        </button>
+
+                        <div style="text-align:center; margin-top:22px;">
+                            <a href="javascript:void(0)" class="forgot-link" onclick="switchAuthTab('login')">
+                                ← Back to Sign In
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FLOATING WHATSAPP -->
+    <a href="https://wa.me/{{ whatsapp_number }}?text=Hi%20QuickBite%20Support,%20I%20need%20assistance%20logging%20in." target="_blank" class="floating-whatsapp-btn" title="Chat with QuickBite Support on WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+        <span>WhatsApp Support</span>
+    </a>
+
+    <!-- UNIVERSAL FOOTER -->
+    <footer class="qb-footer">
+        <div class="qb-footer-container">
+            <div class="qb-footer-col">
+                <h4>QuickBite Dispatch</h4>
+                <p>High-performance graph-based food delivery dispatch engine powered by Dijkstra shortest path routing and Min-Heap priority rider matching.</p>
+                <div class="qb-footer-badge">🟢 Dispatch Engine Active</div>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Navigation</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/orders">My Orders</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/checkout">Checkout</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Customer Care</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/help">Help & Support</a></li>
+                    <li><a href="/refunds">Refund Status</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Policies</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/refund-policy">Refund & Cancellation Policy</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="qb-footer-bottom">
+            <div>© {{ current_year }} QuickBite Technologies Inc. All rights reserved.</div>
+            <div>Dijkstra Shortest Path Dispatch • Min-Heap Rider Allocation</div>
+        </div>
+    </footer>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const nextUrl = urlParams.get('next') || '/profile';
+
+        function switchAuthTab(mode) {
+            hideAlert();
+            document.querySelectorAll('.auth-nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.auth-tab-view').forEach(v => v.classList.remove('active'));
+
+            if (mode === 'signup') {
+                document.getElementById('tabBtnSignup').classList.add('active');
+                document.getElementById('viewSignup').classList.add('active');
+                document.getElementById('authTabs').style.display = 'flex';
+            } else if (mode === 'forgot') {
+                document.getElementById('viewForgot').classList.add('active');
+                document.getElementById('authTabs').style.display = 'none';
+            } else {
+                document.getElementById('tabBtnLogin').classList.add('active');
+                document.getElementById('viewLogin').classList.add('active');
+                document.getElementById('authTabs').style.display = 'flex';
+            }
+        }
+
+        function showAlert(msg, isSuccess = false) {
+            const errBox = document.getElementById('authAlertError');
+            const succBox = document.getElementById('authAlertSuccess');
+            if (isSuccess) {
+                succBox.innerText = msg;
+                succBox.style.display = 'block';
+                errBox.style.display = 'none';
+            } else {
+                errBox.innerText = msg;
+                errBox.style.display = 'block';
+                succBox.style.display = 'none';
+            }
+        }
+
+        function hideAlert() {
+            document.getElementById('authAlertError').style.display = 'none';
+            document.getElementById('authAlertSuccess').style.display = 'none';
+        }
+
+        function togglePassVisibility(inputId) {
+            const el = document.getElementById(inputId);
+            el.type = el.type === 'password' ? 'text' : 'password';
+        }
+
+        async function submitLogin() {
+            hideAlert();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('btnSubmitLogin');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span>Authorizing... ⚡</span>';
+
+            try {
+                const res = await fetch("/api/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password, next: nextUrl })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.message || "Invalid credentials.");
+
+                showAlert("Login successful! Redirecting...", true);
+                setTimeout(() => {
+                    window.location.href = data.redirect || '/profile';
+                }, 500);
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Sign In to QuickBite 🚀</span>';
+                showAlert(err.message);
+            }
+        }
+
+        async function submitSignup() {
+            hideAlert();
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const location = document.getElementById('signupLocation').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirm = document.getElementById('signupConfirmPassword').value;
+            const btn = document.getElementById('btnSubmitSignup');
+
+            if (password !== confirm) {
+                showAlert("Passwords do not match! Please check again.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span>Creating Account... ✨</span>';
+
+            try {
+                const res = await fetch("/api/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, email, phone, location, password })
+                });
+                const data = await res.json();
+                btn.disabled = false;
+                btn.innerHTML = '<span>Create Account ✨</span>';
+
+                if (!res.ok || !data.success) throw new Error(data.message || "Sign up failed.");
+
+                // Reset signup form and switch to login tab with pre-filled email
+                document.getElementById('signupForm').reset();
+                switchAuthTab('login');
+                document.getElementById('loginEmail').value = email;
+                document.getElementById('loginPassword').value = '';
+                showAlert(data.message || "Account created successfully. Please login.", true);
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Create Account ✨</span>';
+                showAlert(err.message);
+            }
+        }
+
+        async function submitForgotPassword() {
+            hideAlert();
+            const email = document.getElementById('forgotEmail').value.trim();
+            const btn = document.getElementById('btnSubmitForgot');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span>Sending Link... 📩</span>';
+
+            try {
+                const res = await fetch("/api/forgot-password", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                btn.disabled = false;
+                btn.innerHTML = '<span>Send Recovery Link 📩</span>';
+                showAlert(data.message || "Password reset link sent to your email!", true);
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Send Recovery Link 📩</span>';
+                showAlert(err.message);
+            }
+        }
+
+        function quickFillLogin(email, password) {
+            switchAuthTab('login');
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = password;
+            submitLogin();
+        }
+
+        // Auto-switch to signup if ?mode=signup in URL
+        if (urlParams.get('mode') === 'signup') {
+            switchAuthTab('signup');
+        }
+    </script>
+</body>
+</html>

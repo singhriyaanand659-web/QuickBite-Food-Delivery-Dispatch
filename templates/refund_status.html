@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Status — QuickBite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --orange: #ff5a1f;
+            --orange-dark: #e84d16;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --green: #10b981;
+            --green-dark: #059669;
+            --blue: #3b82f6;
+        }
+        body {
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .navbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--orange);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #475569;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .nav-links a:hover { color: var(--orange); }
+        .page {
+            width: min(900px, 92%);
+            margin: 40px auto 80px;
+        }
+        .page-header {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+        .page-header p {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .search-box {
+            display: flex;
+            gap: 10px;
+            background: white;
+            padding: 6px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            margin-bottom: 25px;
+        }
+        .search-input {
+            flex: 1;
+            border: none;
+            padding: 10px 14px;
+            font-size: 14px;
+            outline: none;
+        }
+        .search-btn {
+            background: var(--orange);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .search-btn:hover { background: var(--orange-dark); }
+        .card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            margin-bottom: 24px;
+        }
+        .refund-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .refund-id-group h2 {
+            font-size: 20px;
+            font-weight: 900;
+        }
+        .refund-id-group span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+        .refund-amount-badge {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--green-dark);
+            background: #ecfdf5;
+            padding: 8px 18px;
+            border-radius: 12px;
+            border: 1px solid #a7f3d0;
+        }
+        /* TIMELINE */
+        .timeline {
+            position: relative;
+            margin: 35px 0;
+            padding: 0 10px;
+        }
+        .timeline-track {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            right: 30px;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+        .timeline-progress {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            height: 4px;
+            background: var(--green);
+            z-index: 2;
+            transition: width 0.4s ease;
+        }
+        .timeline-steps {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            justify-content: space-between;
+        }
+        .timeline-step {
+            text-align: center;
+            width: 140px;
+        }
+        .timeline-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #cbd5e1;
+            margin: 0 auto 10px;
+            display: grid;
+            place-items: center;
+            font-size: 16px;
+            font-weight: 900;
+            color: #64748b;
+            transition: all 0.3s;
+        }
+        .timeline-step.completed .timeline-circle {
+            background: var(--green);
+            border-color: var(--green);
+            color: white;
+        }
+        .timeline-step.active .timeline-circle {
+            background: white;
+            border-color: var(--orange);
+            color: var(--orange);
+            box-shadow: 0 0 0 5px rgba(255, 90, 31, 0.15);
+        }
+        .timeline-step strong {
+            display: block;
+            font-size: 13px;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+        .timeline-step span {
+            font-size: 11px;
+            color: var(--muted);
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-top: 25px;
+        }
+        .detail-item strong {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+        .detail-item span {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .btn-whatsapp-refund {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #25d366;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 14px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: 0.2s;
+        }
+        .btn-whatsapp-refund:hover { background: #20ba59; }
+        .cod-notice-card {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 16px;
+            padding: 28px;
+            text-align: center;
+        }
+        .cod-notice-card h3 {
+            color: #b45309;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .cod-notice-card p {
+            color: #78350f;
+            font-size: 14px;
+            max-width: 550px;
+            margin: 0 auto 20px;
+            line-height: 1.6;
+        }
+        @media (max-width: 650px) {
+            .details-grid { grid-template-columns: 1fr; }
+            .timeline-steps { font-size: 11px; }
+            .timeline-step { width: 100px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="/" class="logo">
+            <span>🍕</span> QuickBite
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/orders">My Orders</a>
+            <a href="/faq">FAQ</a>
+            <a href="/help">Help</a>
+            {% if current_user %}
+                <div class="user-nav-wrapper">
+                    <button class="user-avatar-btn" onclick="toggleUserDropdown(event)">
+                        <span>{{ current_user.avatar or '👨‍💼' }}</span>
+                        <span>{{ current_user.name.split(' ')[0] }}</span>
+                        <span style="font-size:10px; color:#94a3b8;">▼</span>
+                    </button>
+                    <div id="userDropdownMenu" class="user-dropdown-menu">
+                        <div class="user-dropdown-header">
+                            <strong>{{ current_user.name }}</strong>
+                            <span>{{ current_user.email }}</span>
+                        </div>
+                        <a href="{{ url_for('profile_page') }}" class="user-dropdown-link">👤 My Profile</a>
+                        <a href="{{ url_for('orders_page') }}" class="user-dropdown-link">📦 My Orders</a>
+                        <a href="{{ url_for('cart') }}" class="user-dropdown-link">🛒 View Cart</a>
+                        <a href="{{ url_for('logout') }}" class="user-dropdown-link logout">🚪 Log Out</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ url_for('login_page') }}" class="nav-signin-btn">
+                    <span>👤 Sign In</span>
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="page">
+        <div class="page-header">
+            <div>
+                <h1>💰 Refund Tracker</h1>
+                <p>Track your automated refund status and bank credit timeline in real time.</p>
+            </div>
+            <a href="/orders" style="color:var(--orange); font-weight:800; text-decoration:none; font-size:14px;">← Back to My Orders</a>
+        </div>
+
+        <!-- SEARCH BOX -->
+        <form class="search-box" onsubmit="event.preventDefault(); searchRefund();">
+            <input type="text" id="orderSearchInput" class="search-input" placeholder="Search by Order ID (e.g. WEB001, O002)..." value="{{ order.order_id if order else '' }}">
+            <button type="submit" class="search-btn">Lookup Refund</button>
+        </form>
+
+        {% if order %}
+            {% if order.payment_method == 'cod' or order.payment_mode == 'cod' %}
+                <!-- COD NOTICE -->
+                <div class="cod-notice-card">
+                    <div style="font-size:42px; margin-bottom:10px;">💵</div>
+                    <h3>No Refund Required (Cash on Delivery)</h3>
+                    <p>
+                        Order <strong>#{{ order.order_id }}</strong> was placed with <strong>Cash on Delivery</strong>. Since no upfront online payment was collected, no amount needs to be refunded.
+                    </p>
+                    <div style="display:flex; justify-content:center; gap:12px;">
+                        <a href="/orders" class="search-btn" style="background:#1e293b; text-decoration:none;">View All Orders</a>
+                        <a href="/" class="search-btn" style="text-decoration:none;">Order Food</a>
+                    </div>
+                </div>
+            {% else %}
+                <!-- PREPAID REFUND CARD -->
+                <div class="card">
+                    <div class="refund-header">
+                        <div class="refund-id-group">
+                            <h2>Refund for Order #{{ order.order_id }}</h2>
+                            <span>Refund Reference ID: <strong>{{ refund.refund_id if refund else ('REF-' + order.order_id) }}</strong></span>
+                        </div>
+                        <div class="refund-amount-badge">
+                            ₹{{ order.total if order.total else '249' }}
+                        </div>
+                    </div>
+
+                    <!-- TIMELINE -->
+                    {% set r_status = refund.status if refund else 'completed' %}
+                    <div class="timeline">
+                        <div class="timeline-track"></div>
+                        <div class="timeline-progress" style="width: {{ '100%' if r_status == 'completed' else ('50%' if r_status == 'processing' else '15%') }};"></div>
+                        <div class="timeline-steps">
+                            <div class="timeline-step completed">
+                                <div class="timeline-circle">✓</div>
+                                <strong>Refund Initiated</strong>
+                                <span>{{ refund.created_at if refund else 'Instant' }}</span>
+                            </div>
+                            <div class="timeline-step {{ 'completed' if r_status in ['processing', 'completed'] else 'active' }}">
+                                <div class="timeline-circle">{{ '✓' if r_status == 'completed' else '2' }}</div>
+                                <strong>Bank Processing</strong>
+                                <span>{{ 'Verified' if r_status == 'completed' else 'In Progress' }}</span>
+                            </div>
+                            <div class="timeline-step {{ 'completed' if r_status == 'completed' else ('active' if r_status == 'processing' else '') }}">
+                                <div class="timeline-circle">{{ '✓' if r_status == 'completed' else '3' }}</div>
+                                <strong>Refund Completed</strong>
+                                <span>Credited to Source</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <strong>Original Payment Method</strong>
+                            <span>{{ (order.payment_method or order.payment_mode or 'UPI / Card') | upper }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Destination Account</strong>
+                            <span>{{ refund.account_destination if refund else (order.payment_details or 'Original Source Account') }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Cancellation Reason</strong>
+                            <span>{{ order.cancellation_reason or 'Customer requested cancellation' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Estimated Timeline</strong>
+                            <span style="color:var(--green-dark);">Instant for Demo (2-4 Days in Prod)</span>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:25px; flex-wrap:wrap; gap:12px;">
+                        <a href="https://wa.me/{{ whatsapp_number }}?text=Hi%20QuickBite%20Support,%20I%20am%20inquiring%20about%20my%20refund%20for%20Order%20%23{{ order.order_id }}%20amounting%20to%20₹{{ order.total }}." target="_blank" class="btn-whatsapp-refund">
+                            <span>💬 Contact Support about Refund on WhatsApp</span>
+                        </a>
+                        <a href="/orders" style="color:var(--muted); font-size:13px; font-weight:700; text-decoration:none;">View in My Orders →</a>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <!-- EMPTY STATE -->
+            <div class="card" style="text-align:center; padding:50px 20px;">
+                <div style="font-size:45px; margin-bottom:12px;">🔍</div>
+                <h3 style="font-size:20px; font-weight:800; margin-bottom:8px;">Lookup Your Order Refund</h3>
+                <p style="color:var(--muted); font-size:14px; max-width:450px; margin:0 auto 20px;">
+                    Enter your Order ID in the search bar above to view the live status of your refund.
+                </p>
+                <a href="/orders" class="search-btn" style="text-decoration:none; display:inline-block;">View My Orders</a>
+            </div>
+        {% endif %}
+    </main>
+
+    <!-- FLOATING WHATSAPP -->
+    <a href="https://wa.me/{{ whatsapp_number }}?text=Hi%20QuickBite%20Support,%20I%20have%20a%20question%20about%20my%20refund." target="_blank" class="floating-whatsapp-btn" title="Chat with QuickBite Support on WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+        <span>WhatsApp Support</span>
+    </a>
+
+    <!-- UNIVERSAL FOOTER -->
+    <footer class="qb-footer">
+        <div class="qb-footer-container">
+            <div class="qb-footer-col">
+                <h4>QuickBite Dispatch</h4>
+                <p>High-performance graph-based food delivery dispatch engine powered by Dijkstra shortest path routing and Min-Heap priority rider matching.</p>
+                <div class="qb-footer-badge">🟢 Dispatch Engine Active</div>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Navigation</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/orders">My Orders</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/checkout">Checkout</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Customer Care</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/help">Help & Support</a></li>
+                    <li><a href="/refunds">Refund Status</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="qb-footer-col">
+                <h4>Policies</h4>
+                <ul class="qb-footer-links">
+                    <li><a href="/refund-policy">Refund & Cancellation Policy</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms & Conditions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="qb-footer-bottom">
+            <div>© {{ current_year }} QuickBite Technologies Inc. All rights reserved.</div>
+            <div>Dijkstra Shortest Path Dispatch • Min-Heap Rider Allocation</div>
+        </div>
+    </footer>
+
+    <script>
+        function searchRefund() {
+            const orderId = document.getElementById('orderSearchInput').value.trim();
+            if (orderId) {
+                window.location.href = `/refund-status/${encodeURIComponent(orderId)}`;
+            }
+        }
+
+        function toggleUserDropdown(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.toggle('show');
+        }
+        window.addEventListener('click', function() {
+            const menu = document.getElementById('userDropdownMenu');
+            if (menu) menu.classList.remove('show');
+        });
+    </script>
+</body>
+</html>
