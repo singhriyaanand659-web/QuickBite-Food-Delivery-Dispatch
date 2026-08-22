@@ -1815,23 +1815,46 @@ body {
     color: #ffffff !important;
 }
 
-.floating-whatsapp-btn svg {
-    width: 22px;
-    height: 22px;
-    fill: currentColor;
+/* ============================================================
+   GLOBAL RESPONSIVE RESET & STICKY FOOTER
+============================================================ */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+main, .page, .page-container, .auth-page-wrapper, .tracking-container, .profile-page-container {
+    flex: 1 0 auto;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* ============================================================
-   UNIVERSAL QUICKBITE FOOTER
+   UNIFIED GLOBAL FOOTER
 ============================================================ */
-
+.qb-global-footer,
 .qb-footer {
-    background: #111418;
-    color: #a1a1aa;
-    padding: 60px 6% 35px;
-    margin-top: 80px;
-    border-top: 1px solid #27272a;
+    margin-top: auto;
+    background: #0f172a;
+    color: #94a3b8;
+    border-top: 1px solid #1e293b;
+    padding: 50px 6% 30px;
     font-size: 14px;
+    width: 100%;
 }
 
 .qb-footer-container {
@@ -1839,21 +1862,52 @@ body {
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1.8fr 1fr 1fr 1.2fr;
-    gap: 40px;
+    gap: 36px;
 }
 
+.qb-footer-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.qb-footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+    margin-bottom: 12px;
+}
+
+.qb-footer-logo-badge {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #ff5a1f, #ff8a4c);
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 16px;
+}
+
+.qb-footer-tagline,
+.qb-footer-col p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #94a3b8;
+    margin: 0 0 16px;
+}
+
+.qb-footer-heading,
 .qb-footer-col h4 {
     color: #ffffff;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 800;
-    margin-bottom: 18px;
+    margin: 0 0 16px;
     letter-spacing: -0.3px;
-}
-
-.qb-footer-col p {
-    line-height: 1.6;
-    margin-bottom: 15px;
-    color: #9ca3af;
 }
 
 .qb-footer-links {
@@ -1866,54 +1920,141 @@ body {
 }
 
 .qb-footer-links a {
-    color: #9ca3af;
+    color: #94a3b8;
     text-decoration: none;
-    transition: color 0.2s ease;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
 .qb-footer-links a:hover {
     color: #ff5a1f;
-}
-
-.qb-footer-bottom {
-    max-width: 1200px;
-    margin: 45px auto 0;
-    padding-top: 25px;
-    border-top: 1px solid #1f242d;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 13px;
-    color: #6b7280;
-    flex-wrap: wrap;
-    gap: 15px;
+    padding-left: 3px;
 }
 
 .qb-footer-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background: #1f2937;
+    gap: 8px;
+    background: #1e293b;
     color: #38bdf8;
-    padding: 6px 12px;
+    padding: 6px 14px;
     border-radius: 20px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
+    width: fit-content;
+}
+
+.status-indicator-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+}
+
+.qb-footer-bottom {
+    max-width: 1200px;
+    margin: 40px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #64748b;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 @media (max-width: 900px) {
     .qb-footer-container {
         grid-template-columns: 1fr 1fr;
+        gap: 28px;
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 540px) {
     .qb-footer-container {
         grid-template-columns: 1fr;
+        gap: 24px;
     }
     .qb-footer-bottom {
         flex-direction: column;
         text-align: center;
+        gap: 8px;
+    }
+}
+
+/* ============================================================
+   GLOBAL FLOATING WHATSAPP BUTTON (SMALL FIXED BOTTOM-RIGHT)
+============================================================ */
+.qb-whatsapp-float,
+.floating-whatsapp-btn {
+    position: fixed !important;
+    bottom: 22px !important;
+    right: 22px !important;
+    z-index: 999999 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    background: #25D366 !important;
+    color: #ffffff !important;
+    padding: 10px 18px !important;
+    border-radius: 50px !important;
+    text-decoration: none !important;
+    font-weight: 800 !important;
+    font-size: 13px !important;
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4) !important;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease !important;
+    cursor: pointer !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: fit-content !important;
+}
+
+.qb-whatsapp-float:hover,
+.floating-whatsapp-btn:hover {
+    transform: translateY(-3px) scale(1.03) !important;
+    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.55) !important;
+    color: #ffffff !important;
+}
+
+.qb-whatsapp-svg,
+.floating-whatsapp-btn svg {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    max-width: 20px !important;
+    max-height: 20px !important;
+    fill: #ffffff !important;
+    display: inline-block !important;
+    flex-shrink: 0 !important;
+}
+
+.qb-whatsapp-text,
+.floating-whatsapp-btn span {
+    color: #ffffff !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+}
+
+@media (max-width: 480px) {
+    .qb-whatsapp-float,
+    .floating-whatsapp-btn {
+        padding: 12px !important;
+        border-radius: 50% !important;
+        bottom: 16px !important;
+        right: 16px !important;
+        width: 46px !important;
+        height: 46px !important;
+        justify-content: center !important;
+    }
+    .qb-whatsapp-text,
+    .floating-whatsapp-btn span {
+        display: none !important;
     }
 }
 
@@ -2188,6 +2329,120 @@ body {
 .nav-signin-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(255, 90, 31, 0.4);
+}
+
+/* ============================================================
+   GLOBAL MOBILE RESPONSIVENESS OVERRIDES & POLISH
+============================================================ */
+
+@media (max-width: 768px) {
+    /* Navbar Wrapping */
+    .qb-navbar,
+    .navbar,
+    .auth-top-nav,
+    .profile-nav {
+        padding: 12px 4% !important;
+        flex-wrap: wrap !important;
+        height: auto !important;
+        min-height: 60px !important;
+        gap: 10px !important;
+    }
+    
+    .nav-links,
+    .qb-nav,
+    .qb-nav-right {
+        gap: 10px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .user-dropdown-menu {
+        right: 0 !important;
+        left: auto !important;
+        max-width: calc(100vw - 24px) !important;
+    }
+
+    /* Page Containers */
+    .page,
+    .page-container,
+    .container,
+    .auth-page-wrapper,
+    .profile-page-container,
+    .tracking-container {
+        width: 95% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* Grids & Cards */
+    .grid,
+    .cards-grid,
+    .checkout-grid,
+    .tracking-grid,
+    .profile-main-layout,
+    .profile-stats-grid,
+    .auth-page-wrapper {
+        grid-template-columns: 1fr !important;
+        flex-direction: column !important;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 13px !important;
+    }
+
+    /* Buttons */
+    .btn,
+    .btn-auth,
+    .btn-submit-main,
+    .btn-save-profile,
+    .btn-primary,
+    .btn-checkout {
+        width: 100% !important;
+        padding: 12px 16px !important;
+        font-size: 14px !important;
+    }
+
+    /* Form Fields */
+    .form-row,
+    .form-2col,
+    .form-row-2col {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Headings */
+    h1 {
+        font-size: 24px !important;
+        line-height: 1.25 !important;
+    }
+    h2 {
+        font-size: 20px !important;
+    }
+    h3 {
+        font-size: 17px !important;
+    }
+
+    /* Tables & Preformatted code */
+    table,
+    .route-table,
+    .simulation-output {
+        display: block !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        max-width: 100% !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .brand-logo span,
+    .logo span {
+        font-size: 18px !important;
+    }
+    .user-avatar-btn span:nth-child(2) {
+        display: none !important;
+    }
 }
 
 
