@@ -2267,6 +2267,24 @@ main, .page, .page-container, .auth-page-wrapper, .tracking-container, .profile-
     box-shadow: 0 8px 20px rgba(255, 90, 31, 0.4);
 }
 
+.nav-signin-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.nav-signin-link:hover {
+    color: #ff5a1f;
+}
+
 /* ============================================================
    GLOBAL MOBILE RESPONSIVENESS OVERRIDES & POLISH
    (Full support for 320px, 375px, 430px, 768px, 900px)
