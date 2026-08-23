@@ -1753,37 +1753,6 @@ body {
 }
 
 /* ============================================================
-   GLOBAL FLOATING WHATSAPP BUTTON
-============================================================ */
-
-.floating-whatsapp-btn {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #25d366;
-    color: #ffffff !important;
-    padding: 12px 20px;
-    border-radius: 50px;
-    font-size: 14px;
-    font-weight: 800;
-    text-decoration: none;
-    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35);
-    transition: all 0.25s ease;
-    cursor: pointer;
-}
-
-.floating-whatsapp-btn:hover {
-    background: #20ba59;
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 12px 28px rgba(37, 211, 102, 0.45);
-    color: #ffffff !important;
-}
-
-/* ============================================================
    GLOBAL RESPONSIVE RESET & STICKY FOOTER
 ============================================================ */
 *, *::before, *::after {
@@ -1969,19 +1938,19 @@ main, .page, .page-container, .auth-page-wrapper, .tracking-container, .profile-
 }
 
 /* ============================================================
-   ONE SHARED GLOBAL CIRCULAR WHATSAPP BUTTON (52px max)
+   ONE SHARED GLOBAL CIRCULAR WHATSAPP BUTTON (56px)
 ============================================================ */
 .qb-whatsapp-float,
 .floating-whatsapp-btn {
     position: fixed !important;
     bottom: 20px !important;
     right: 20px !important;
-    width: 52px !important;
-    height: 52px !important;
+    width: 56px !important;
+    height: 56px !important;
     max-width: 56px !important;
     max-height: 56px !important;
-    min-width: 52px !important;
-    min-height: 52px !important;
+    min-width: 56px !important;
+    min-height: 56px !important;
     border-radius: 50% !important;
     background: #25D366 !important;
     box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4), 0 2px 6px rgba(0, 0, 0, 0.15) !important;
@@ -1994,7 +1963,9 @@ main, .page, .page-container, .auth-page-wrapper, .tracking-container, .profile-
     margin: 0 !important;
     border: none !important;
     cursor: pointer !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
 }
 
 .qb-whatsapp-float:hover,
@@ -2006,12 +1977,12 @@ main, .page, .page-container, .auth-page-wrapper, .tracking-container, .profile-
 
 .qb-whatsapp-svg,
 .floating-whatsapp-btn svg {
-    width: 28px !important;
-    height: 28px !important;
-    max-width: 28px !important;
-    max-height: 28px !important;
-    min-width: 28px !important;
-    min-height: 28px !important;
+    width: 30px !important;
+    height: 30px !important;
+    max-width: 30px !important;
+    max-height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
     fill: #ffffff !important;
     display: block !important;
     flex-shrink: 0 !important;
@@ -2298,26 +2269,104 @@ main, .page, .page-container, .auth-page-wrapper, .tracking-container, .profile-
 
 /* ============================================================
    GLOBAL MOBILE RESPONSIVENESS OVERRIDES & POLISH
+   (Full support for 320px, 375px, 430px, 768px, 900px)
 ============================================================ */
 
+@media (max-width: 900px) {
+    .content,
+    .contact-layout,
+    .profile-main-layout,
+    .layout,
+    .cart-layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    .bill-card,
+    .cart-card {
+        position: static !important;
+    }
+
+    .search {
+        display: none !important;
+    }
+
+    .restaurant-hero {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 24px 20px !important;
+    }
+
+    .restaurant-image {
+        width: 100% !important;
+    }
+
+    .auth-page-wrapper {
+        flex-direction: column !important;
+        padding: 24px 4% 50px !important;
+        gap: 30px !important;
+    }
+
+    .auth-showcase {
+        text-align: center !important;
+        align-items: center !important;
+        max-width: 100% !important;
+    }
+
+    .showcase-badge {
+        margin: 0 auto !important;
+    }
+
+    .showcase-title {
+        font-size: 32px !important;
+    }
+
+    .live-preview-card {
+        display: none !important;
+    }
+
+    .profile-stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
 @media (max-width: 768px) {
+    /* Universal Overflow Prevention */
+    html, body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+    }
+
     /* Navbar Wrapping */
     .qb-navbar,
     .navbar,
     .auth-top-nav,
-    .profile-nav {
-        padding: 12px 4% !important;
+    .profile-nav,
+    header {
+        padding: 10px 4% !important;
         flex-wrap: wrap !important;
         height: auto !important;
-        min-height: 60px !important;
-        gap: 10px !important;
+        min-height: 56px !important;
+        gap: 8px !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
     
     .nav-links,
     .qb-nav,
     .qb-nav-right {
-        gap: 10px !important;
+        gap: 8px !important;
         flex-wrap: wrap !important;
+    }
+
+    .qb-nav {
+        display: none !important;
+    }
+
+    .location-button {
+        display: none !important;
     }
 
     .user-dropdown-menu {
@@ -2332,24 +2381,238 @@ main, .page, .page-container, .auth-page-wrapper, .tracking-container, .profile-
     .container,
     .auth-page-wrapper,
     .profile-page-container,
-    .tracking-container {
-        width: 95% !important;
+    .tracking-container,
+    .qb-container {
+        width: 94% !important;
+        max-width: 94% !important;
         margin-left: auto !important;
         margin-right: auto !important;
         padding-left: 0 !important;
         padding-right: 0 !important;
+        box-sizing: border-box !important;
     }
 
-    /* Grids & Cards */
+    /* Grids & Columns */
     .grid,
     .cards-grid,
     .checkout-grid,
     .tracking-grid,
-    .profile-main-layout,
-    .profile-stats-grid,
-    .auth-page-wrapper {
+    .form-grid,
+    .order-body,
+    .dispatch-grid {
         grid-template-columns: 1fr !important;
+    }
+
+    .order-actions {
+        align-items: stretch !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        width: 100% !important;
+    }
+
+    .issue-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .steps {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 600px) {
+    /* Hero Section */
+    .hero {
+        padding: 36px 4% !important;
+        min-height: auto !important;
+    }
+
+    .hero-content {
+        width: 100% !important;
+    }
+
+    .hero-visual {
+        display: none !important;
+    }
+
+    .hero h1 {
+        font-size: clamp(28px, 8vw, 42px) !important;
+        letter-spacing: -1.5px !important;
+        line-height: 1.05 !important;
+    }
+
+    .hero-actions {
         flex-direction: column !important;
+        width: 100% !important;
+        gap: 10px !important;
+    }
+
+    .hero-actions .primary-button,
+    .hero-actions .secondary-button {
+        width: 100% !important;
+        text-align: center !important;
+        justify-content: center !important;
+    }
+
+    .search-section {
+        padding: 0 4% !important;
+        margin-top: -16px !important;
+    }
+
+    .search-box {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .categories {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        margin-bottom: 40px !important;
+    }
+
+    .restaurant-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+
+    .food-item {
+        grid-template-columns: 1fr !important;
+        padding: 18px 14px 32px !important;
+        gap: 14px !important;
+    }
+
+    .food-image {
+        width: 100% !important;
+        height: 130px !important;
+    }
+
+    .cart-item {
+        grid-template-columns: 60px minmax(0, 1fr) !important;
+        padding: 16px 12px !important;
+        gap: 12px !important;
+    }
+
+    .cart-item .food-image {
+        width: 60px !important;
+        height: 60px !important;
+        font-size: 28px !important;
+    }
+
+    .item-right {
+        grid-column: 2 !important;
+        text-align: left !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 12px !important;
+    }
+
+    /* Dispatch Section */
+    .dispatch-section {
+        padding: 24px 16px !important;
+        margin-top: 40px !important;
+        border-radius: 18px !important;
+        box-sizing: border-box !important;
+    }
+
+    .dispatch-features {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+
+    .dispatch-map {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 180px !important;
+        font-size: 65px !important;
+    }
+
+    .steps {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .tracking-cta {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 24px 18px !important;
+        text-align: center !important;
+        gap: 16px !important;
+    }
+
+    .tracking-cta .primary-button {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    /* Tracking Page */
+    .track-hero {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+    }
+
+    .track-hero > div:last-child {
+        width: 100% !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .btn-advance {
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    .eta-banner {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 10px !important;
+        padding: 16px !important;
+    }
+
+    /* Refund Status Timeline Responsive Stack */
+    .timeline-track,
+    .timeline-progress {
+        display: none !important;
+    }
+
+    .timeline-steps {
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    .timeline-step {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        text-align: left !important;
+        gap: 14px !important;
+    }
+
+    .timeline-circle {
+        margin: 0 !important;
+        flex-shrink: 0 !important;
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 14px !important;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+        padding: 14px !important;
+    }
+
+    /* Profile Hero */
+    .profile-hero-banner {
+        padding: 24px 18px !important;
+    }
+
+    .user-identity {
+        flex-direction: column !important;
+        text-align: center !important;
+        align-items: center !important;
+        gap: 14px !important;
     }
 }
 
@@ -2364,49 +2627,206 @@ main, .page, .page-container, .auth-page-wrapper, .tracking-container, .profile-
     .btn-submit-main,
     .btn-save-profile,
     .btn-primary,
-    .btn-checkout {
+    .btn-checkout,
+    .btn-proceed,
+    .btn-pay,
+    .btn-send,
+    .btn-submit {
         width: 100% !important;
-        padding: 12px 16px !important;
+        padding: 13px 16px !important;
         font-size: 14px !important;
+        box-sizing: border-box !important;
+    }
+
+    .btn-action {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+        font-size: 12px !important;
+        padding: 10px !important;
     }
 
     /* Form Fields */
     .form-row,
     .form-2col,
-    .form-row-2col {
+    .form-row-2col,
+    .form-grid {
         grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+
+    .form-control,
+    .form-field,
+    .form-input {
+        font-size: 13px !important;
+        padding: 11px 12px !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+    }
+
+    /* Cards & Containers */
+    .card,
+    .content-card,
+    .auth-glass-card,
+    .ticket-section,
+    .bill-card,
+    .order-card,
+    .info-card,
+    .channel-card,
+    .issue-card {
+        padding: 20px 14px !important;
+        border-radius: 14px !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .channel-card,
+    .issue-card {
+        min-width: 0 !important;
     }
 
     /* Headings */
     h1 {
-        font-size: 24px !important;
+        font-size: 22px !important;
         line-height: 1.25 !important;
     }
     h2 {
-        font-size: 20px !important;
+        font-size: 18px !important;
     }
     h3 {
-        font-size: 17px !important;
+        font-size: 15px !important;
     }
 
     /* Tables & Preformatted code */
     table,
+    .policy-table,
     .route-table,
     .simulation-output {
         display: block !important;
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch !important;
         max-width: 100% !important;
+        width: 100% !important;
+        border-collapse: collapse !important;
+        box-sizing: border-box !important;
+    }
+
+    table th, table td,
+    .policy-table th, .policy-table td {
+        padding: 8px 10px !important;
+        font-size: 12px !important;
+    }
+
+    /* Checkout & Payment Steps Bar */
+    .steps-bar {
+        gap: 6px !important;
+        font-size: 11px !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+    }
+
+    .step-divider {
+        width: 14px !important;
+    }
+
+    .step-circle {
+        width: 22px !important;
+        height: 22px !important;
+        font-size: 10px !important;
+    }
+
+    /* Orders Page */
+    .page-header {
+        margin-bottom: 20px !important;
+    }
+
+    .page-header h1 {
+        font-size: 22px !important;
+    }
+
+    .order-top {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+    }
+
+    /* FAQ Tabs */
+    .faq-hero h1 {
+        font-size: 22px !important;
+    }
+
+    .faq-tabs {
+        display: flex !important;
+        gap: 6px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 6px !important;
+        max-width: 100% !important;
+    }
+
+    .faq-tab {
+        font-size: 12px !important;
+        padding: 7px 12px !important;
+    }
+
+    /* Modals */
+    .pay-modal-box {
+        padding: 24px 16px !important;
+        border-radius: 16px !important;
+        width: min(92vw, 400px) !important;
+    }
+
+    /* Demo Chips in Login */
+    .demo-chips-grid {
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
     }
 }
 
 @media (max-width: 360px) {
-    .brand-logo span,
-    .logo span {
+    /* 320px - 360px Ultra-small screens */
+    .brand-logo,
+    .logo,
+    .qb-logo {
         font-size: 18px !important;
     }
+
+    .brand-logo-badge,
+    .brand-badge,
+    .qb-logo-mark {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 16px !important;
+    }
+
     .user-avatar-btn span:nth-child(2) {
         display: none !important;
+    }
+
+    .nav-links a {
+        font-size: 12px !important;
+    }
+
+    .nav-signin-btn {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+    }
+
+    .hero h1 {
+        font-size: 26px !important;
+        letter-spacing: -1px !important;
+    }
+
+    .card,
+    .content-card,
+    .auth-glass-card,
+    .ticket-section,
+    .order-card {
+        padding: 16px 10px !important;
+    }
+
+    .profile-stats-grid {
+        grid-template-columns: 1fr !important;
     }
 }
 

@@ -161,18 +161,18 @@
 }
 
 /* ============================================================
-   ONE FIXED CIRCULAR WHATSAPP BUTTON (52px, bottom:20px, right:20px)
+   ONE FIXED CIRCULAR WHATSAPP BUTTON (56px, bottom:20px, right:20px)
 ============================================================ */
 .qb-whatsapp-float {
     position: fixed !important;
     bottom: 20px !important;
     right: 20px !important;
-    width: 52px !important;
-    height: 52px !important;
+    width: 56px !important;
+    height: 56px !important;
     max-width: 56px !important;
     max-height: 56px !important;
-    min-width: 52px !important;
-    min-height: 52px !important;
+    min-width: 56px !important;
+    min-height: 56px !important;
     border-radius: 50% !important;
     background: #25D366 !important;
     box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4), 0 2px 6px rgba(0, 0, 0, 0.15) !important;
@@ -185,7 +185,7 @@
     margin: 0 !important;
     border: none !important;
     cursor: pointer !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
     overflow: hidden !important;
     box-sizing: border-box !important;
 }
@@ -197,12 +197,12 @@
 }
 
 .qb-whatsapp-svg {
-    width: 28px !important;
-    height: 28px !important;
-    max-width: 28px !important;
-    max-height: 28px !important;
-    min-width: 28px !important;
-    min-height: 28px !important;
+    width: 30px !important;
+    height: 30px !important;
+    max-width: 30px !important;
+    max-height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
     fill: #ffffff !important;
     display: block !important;
     flex-shrink: 0 !important;
@@ -262,7 +262,7 @@
     </div>
 </footer>
 
-<!-- ONE SHARED FIXED CIRCULAR WHATSAPP BUTTON (52px, bottom:20px, right:20px, z-index:9999) -->
-<a href="https://wa.me/{{ whatsapp_number }}?text=Hi%20QuickBite%20Support,%20I%20have%20a%20question." target="_blank" rel="noopener noreferrer" class="qb-whatsapp-float" title="Chat with QuickBite Support on WhatsApp" aria-label="WhatsApp Support" style="position:fixed !important; bottom:20px !important; right:20px !important; width:52px !important; height:52px !important; max-width:56px !important; max-height:56px !important; min-width:52px !important; min-height:52px !important; border-radius:50% !important; background:#25D366 !important; box-shadow:0 4px 16px rgba(37,211,102,0.4), 0 2px 6px rgba(0,0,0,0.15) !important; display:flex !important; align-items:center !important; justify-content:center !important; z-index:9999 !important; text-decoration:none !important; padding:0 !important; margin:0 !important; border:none !important; cursor:pointer !important; overflow:hidden !important; box-sizing:border-box !important;">
-    <svg class="qb-whatsapp-svg" width="28" height="28" viewBox="0 0 24 24" fill="#ffffff" style="width:28px !important; height:28px !important; max-width:28px !important; max-height:28px !important; min-width:28px !important; min-height:28px !important; fill:#ffffff !important; display:block !important; flex-shrink:0 !important;"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+<!-- ONE SHARED FIXED CIRCULAR WHATSAPP BUTTON (56px, bottom:20px, right:20px, z-index:9999) -->
+<a href="https://wa.me/{{ whatsapp_number }}?text=Hi%20QuickBite%20Support,%20I%20have%20a%20question." target="_blank" rel="noopener noreferrer" class="qb-whatsapp-float" title="Chat with QuickBite Support on WhatsApp" aria-label="WhatsApp Support">
+    <svg class="qb-whatsapp-svg" width="30" height="30" viewBox="0 0 24 24" fill="#ffffff"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
 </a>
