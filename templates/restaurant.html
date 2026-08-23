@@ -650,55 +650,7 @@
 
 <body>
 
-<header>
-
-    <div class="navbar">
-
-        <a href="/" class="logo">
-            🍔 QuickBite
-        </a>
-
-        <div class="search">
-            🔎
-            <span>Search food...</span>
-        </div>
-
-        <div style="display:flex; align-items:center; gap:14px;">
-            <a href="/orders" style="color:#444; font-size:13px; font-weight:700; text-decoration:none;">My Orders</a>
-            <a href="/faq" style="color:#444; font-size:13px; font-weight:700; text-decoration:none;">FAQ</a>
-            <a href="/help" style="color:#444; font-size:13px; font-weight:700; text-decoration:none;">Help</a>
-            <a href="/cart" class="cart-link">
-                🛒 Cart
-                <span id="headerCartCount">0</span>
-            </a>
-            {% if current_user %}
-                <div class="user-nav-wrapper">
-                    <button class="user-avatar-btn" onclick="toggleUserDropdown(event)">
-                        <span>{{ current_user.avatar or '👨‍💼' }}</span>
-                        <span>{{ current_user.name.split(' ')[0] }}</span>
-                        <span style="font-size:10px; color:#94a3b8;">▼</span>
-                    </button>
-                    <div id="userDropdownMenu" class="user-dropdown-menu">
-                        <div class="user-dropdown-header">
-                            <strong>{{ current_user.name }}</strong>
-                            <span>{{ current_user.email }}</span>
-                        </div>
-                        <a href="{{ url_for('profile_page') }}" class="user-dropdown-link">👤 My Profile</a>
-                        <a href="{{ url_for('orders_page') }}" class="user-dropdown-link">📦 My Orders</a>
-                        <a href="{{ url_for('cart') }}" class="user-dropdown-link">🛒 View Cart</a>
-                        <a href="{{ url_for('logout') }}" class="user-dropdown-link logout">🚪 Log Out</a>
-                    </div>
-                </div>
-            {% else %}
-                <a href="{{ url_for('login_page') }}" class="nav-signin-btn">
-                    <span>👤 Sign In</span>
-                </a>
-            {% endif %}
-        </div>
-
-    </div>
-
-</header>
+{% include 'navbar.html' %}
 
 
 <main class="page">

@@ -408,36 +408,7 @@
 </head>
 <body>
 
-    <header class="profile-nav">
-        <a href="/" class="brand-logo">
-            <div class="brand-badge">⚡</div>
-            <span>QuickBite</span>
-        </a>
-        <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/orders">My Orders</a>
-            <a href="/cart">Cart</a>
-            <a href="/faq">FAQ</a>
-            <a href="/help">Help</a>
-            <div class="user-nav-wrapper">
-                <button class="user-avatar-btn" onclick="toggleUserDropdown(event)">
-                    <span>{{ user.avatar or '👨‍💼' }}</span>
-                    <span>{{ user.name.split(' ')[0] }}</span>
-                    <span style="font-size:10px; color:#94a3b8;">▼</span>
-                </button>
-                <div id="userDropdownMenu" class="user-dropdown-menu">
-                    <div class="user-dropdown-header">
-                        <strong>{{ user.name }}</strong>
-                        <span>{{ user.email }}</span>
-                    </div>
-                    <a href="/profile" class="user-dropdown-link">👤 My Profile</a>
-                    <a href="/orders" class="user-dropdown-link">📦 My Orders</a>
-                    <a href="/cart" class="user-dropdown-link">🛒 View Cart</a>
-                    <a href="/logout" class="user-dropdown-link logout">🚪 Log Out</a>
-                </div>
-            </div>
-        </div>
-    </header>
+    {% include 'navbar.html' %}
 
     <main class="profile-page-container">
         <!-- HERO BANNER -->

@@ -1,0 +1,528 @@
+<!-- ============================================================
+     GLOBAL SHARED QUICKBITE NAVBAR / HEADER COMPONENT
+============================================================ -->
+
+<style>
+/* ============================================================
+   GLOBAL NAVBAR STYLES
+============================================================ */
+.qb-global-navbar {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    height: 70px !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0 5% !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+
+.qb-navbar-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 32px !important;
+}
+
+.qb-navbar-logo {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    text-decoration: none !important;
+    color: #0f172a !important;
+    font-size: 24px !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.8px !important;
+    flex-shrink: 0 !important;
+}
+
+.qb-navbar-logo-badge {
+    width: 36px !important;
+    height: 36px !important;
+    background: linear-gradient(135deg, #ff5a1f, #ff8a4c) !important;
+    border-radius: 10px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: #ffffff !important;
+    font-size: 18px !important;
+    flex-shrink: 0 !important;
+    box-shadow: 0 4px 10px rgba(255, 90, 31, 0.3) !important;
+}
+
+.qb-navbar-links {
+    display: flex !important;
+    align-items: center !important;
+    gap: 24px !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.qb-navbar-links a {
+    text-decoration: none !important;
+    color: #475569 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    transition: color 0.2s ease !important;
+}
+
+.qb-navbar-links a:hover {
+    color: #ff5a1f !important;
+}
+
+.qb-navbar-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.qb-nav-location {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #334155 !important;
+    white-space: nowrap !important;
+}
+
+.qb-nav-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 9px 14px !important;
+    border-radius: 10px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    white-space: nowrap !important;
+    border: none !important;
+    cursor: pointer !important;
+}
+
+.qb-nav-orders-btn {
+    background: #fff0e7 !important;
+    color: #ff5a1f !important;
+    border: 1px solid #ffd8c7 !important;
+}
+
+.qb-nav-orders-btn:hover {
+    background: #ffe3d3 !important;
+    transform: translateY(-1px) !important;
+}
+
+.qb-nav-cart-btn {
+    background: #ff5a1f !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(255, 90, 31, 0.25) !important;
+}
+
+.qb-nav-cart-btn:hover {
+    background: #e84d16 !important;
+    transform: translateY(-1px) !important;
+}
+
+.qb-nav-signin-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    background: #0f172a !important;
+    color: #ffffff !important;
+    padding: 9px 16px !important;
+    border-radius: 10px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    white-space: nowrap !important;
+}
+
+.qb-nav-signin-btn:hover {
+    background: #1e293b !important;
+    transform: translateY(-1px) !important;
+}
+
+/* User Profile Dropdown */
+.qb-user-nav-wrapper {
+    position: relative !important;
+}
+
+.qb-user-avatar-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    background: #f8fafc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+.qb-user-avatar-btn:hover {
+    border-color: #ff5a1f !important;
+    background: #fff8f5 !important;
+}
+
+.qb-user-avatar-icon {
+    font-size: 18px !important;
+    line-height: 1 !important;
+}
+
+.qb-user-arrow {
+    font-size: 9px !important;
+    color: #94a3b8 !important;
+    margin-left: 2px !important;
+}
+
+.qb-user-dropdown-menu {
+    display: none;
+    position: absolute !important;
+    top: calc(100% + 10px) !important;
+    right: 0 !important;
+    width: 220px !important;
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12) !important;
+    padding: 8px !important;
+    z-index: 1001 !important;
+    animation: qbFadeIn 0.2s ease !important;
+}
+
+.qb-user-dropdown-menu.show {
+    display: block !important;
+}
+
+.qb-user-dropdown-header {
+    padding: 10px 12px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    margin-bottom: 4px !important;
+}
+
+.qb-user-dropdown-header strong {
+    display: block !important;
+    font-size: 14px !important;
+    color: #0f172a !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.qb-user-dropdown-header span {
+    display: block !important;
+    font-size: 11px !important;
+    color: #64748b !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.qb-dropdown-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 9px 12px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #334155 !important;
+    text-decoration: none !important;
+    border-radius: 8px !important;
+    transition: all 0.15s ease !important;
+}
+
+.qb-dropdown-item:hover {
+    background: #f8fafc !important;
+    color: #ff5a1f !important;
+}
+
+.qb-dropdown-divider {
+    height: 1px !important;
+    background: #f1f5f9 !important;
+    margin: 4px 0 !important;
+}
+
+.qb-logout-item {
+    color: #dc2626 !important;
+}
+
+.qb-logout-item:hover {
+    background: #fef2f2 !important;
+    color: #b91c1c !important;
+}
+
+/* Mobile Hamburger */
+.qb-hamburger-btn {
+    display: none !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 8px 10px !important;
+    cursor: pointer !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.qb-hamburger-bar {
+    width: 20px !important;
+    height: 2px !important;
+    background: #334155 !important;
+    border-radius: 2px !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Mobile Drawer */
+.qb-mobile-nav-drawer {
+    display: none;
+    position: absolute !important;
+    top: 70px !important;
+    left: 0 !important;
+    width: 100% !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08) !important;
+    padding: 16px 5% 20px !important;
+    box-sizing: border-box !important;
+    z-index: 999 !important;
+    animation: qbSlideDown 0.25s ease !important;
+}
+
+.qb-mobile-nav-drawer.show {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+.qb-mobile-nav-links {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    padding-bottom: 12px !important;
+}
+
+.qb-mobile-nav-links a {
+    text-decoration: none !important;
+    color: #334155 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    padding: 8px 10px !important;
+    border-radius: 8px !important;
+}
+
+.qb-mobile-nav-links a:hover {
+    background: #fff8f5 !important;
+    color: #ff5a1f !important;
+}
+
+.qb-mobile-nav-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+}
+
+@keyframes qbFadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes qbSlideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Media Queries */
+@media (max-width: 950px) {
+    .qb-navbar-links,
+    .qb-nav-location {
+        display: none !important;
+    }
+    
+    .qb-hamburger-btn {
+        display: flex !important;
+    }
+}
+
+@media (max-width: 560px) {
+    .qb-global-navbar {
+        padding: 0 4% !important;
+        height: 62px !important;
+    }
+    
+    .qb-mobile-nav-drawer {
+        top: 62px !important;
+    }
+
+    .qb-navbar-logo {
+        font-size: 20px !important;
+    }
+    
+    .qb-navbar-logo-badge {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 16px !important;
+    }
+
+    .qb-nav-btn span:last-child,
+    .qb-user-name {
+        display: none !important;
+    }
+
+    .qb-nav-btn {
+        padding: 8px 10px !important;
+    }
+
+    .qb-nav-signin-btn {
+        padding: 7px 12px !important;
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .qb-navbar-logo span:not(.qb-navbar-logo-badge) {
+        font-size: 18px !important;
+    }
+}
+</style>
+
+<header class="qb-global-navbar">
+    <div class="qb-navbar-left">
+        <a href="/" class="qb-navbar-logo">
+            <span class="qb-navbar-logo-badge">⚡</span>
+            <span>QuickBite</span>
+        </a>
+
+        <ul class="qb-navbar-links">
+            <li><a href="/#restaurants">Restaurants</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/help">Help & Support</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+    </div>
+
+    <div class="qb-navbar-right">
+        <div class="qb-nav-location">
+            <span>📍 Dadar, Mumbai</span>
+        </div>
+
+        <a href="/orders" class="qb-nav-btn qb-nav-orders-btn" title="My Orders">
+            <span>📦</span>
+            <span>My Orders</span>
+        </a>
+
+        <a href="/cart" class="qb-nav-btn qb-nav-cart-btn" title="View Cart">
+            <span>🛒</span>
+            <span>Cart</span>
+        </a>
+
+        {% if current_user %}
+            <div class="qb-user-nav-wrapper">
+                <button class="qb-user-avatar-btn" onclick="toggleQuickBiteUserDropdown(event)" aria-label="User Account">
+                    <span class="qb-user-avatar-icon">{{ current_user.avatar or '👨‍💼' }}</span>
+                    <span class="qb-user-name">{{ current_user.name.split(' ')[0] if current_user.name else 'Profile' }}</span>
+                    <span class="qb-user-arrow">▼</span>
+                </button>
+                <div id="qbUserDropdownMenu" class="qb-user-dropdown-menu">
+                    <div class="qb-user-dropdown-header">
+                        <strong>{{ current_user.name }}</strong>
+                        <span>{{ current_user.email }}</span>
+                    </div>
+                    <a href="/profile" class="qb-dropdown-item">👤 My Profile</a>
+                    <a href="/orders" class="qb-dropdown-item">📦 My Orders</a>
+                    <a href="/cart" class="qb-dropdown-item">🛒 View Cart</a>
+                    <div class="qb-dropdown-divider"></div>
+                    <a href="/logout" class="qb-dropdown-item qb-logout-item">🚪 Log Out</a>
+                </div>
+            </div>
+        {% else %}
+            <a href="/login" class="qb-nav-signin-btn">
+                <span>👤</span>
+                <span>Sign In</span>
+            </a>
+        {% endif %}
+
+        <button class="qb-hamburger-btn" onclick="toggleQuickBiteMobileMenu(event)" aria-label="Open Menu">
+            <span class="qb-hamburger-bar"></span>
+            <span class="qb-hamburger-bar"></span>
+            <span class="qb-hamburger-bar"></span>
+        </button>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="qbMobileNavDrawer" class="qb-mobile-nav-drawer">
+        <div class="qb-mobile-nav-links">
+            <a href="/#restaurants" onclick="toggleQuickBiteMobileMenu(event)">🍽️ Restaurants</a>
+            <a href="/faq">❓ Frequently Asked Questions</a>
+            <a href="/help">💬 Help & Support</a>
+            <a href="/contact">📞 Contact Us</a>
+            <div style="font-size:12px; color:#64748b; padding:6px 10px; font-weight:700;">📍 Location: Dadar, Mumbai</div>
+        </div>
+        <div class="qb-mobile-nav-actions">
+            <a href="/orders" class="qb-nav-btn qb-nav-orders-btn" style="width:100%; justify-content:center;">📦 My Orders</a>
+            <a href="/cart" class="qb-nav-btn qb-nav-cart-btn" style="width:100%; justify-content:center;">🛒 View Cart</a>
+            {% if current_user %}
+                <a href="/profile" class="qb-dropdown-item" style="background:#f8fafc; justify-content:center;">👤 Profile ({{ current_user.name }})</a>
+                <a href="/logout" class="qb-dropdown-item qb-logout-item" style="background:#fef2f2; justify-content:center;">🚪 Log Out</a>
+            {% else %}
+                <a href="/login" class="qb-nav-signin-btn" style="width:100%; justify-content:center;">👤 Sign In / Register</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<script>
+function toggleQuickBiteUserDropdown(e) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    const menu = document.getElementById('qbUserDropdownMenu');
+    if (menu) {
+        menu.classList.toggle('show');
+    }
+    const mobileDrawer = document.getElementById('qbMobileNavDrawer');
+    if (mobileDrawer) {
+        mobileDrawer.classList.remove('show');
+    }
+}
+
+function toggleQuickBiteMobileMenu(e) {
+    if (e) {
+        e.stopPropagation();
+    }
+    const drawer = document.getElementById('qbMobileNavDrawer');
+    if (drawer) {
+        drawer.classList.toggle('show');
+    }
+    const userMenu = document.getElementById('qbUserDropdownMenu');
+    if (userMenu) {
+        userMenu.classList.remove('show');
+    }
+}
+
+window.addEventListener('click', function(e) {
+    const userMenu = document.getElementById('qbUserDropdownMenu');
+    if (userMenu && !e.target.closest('.qb-user-nav-wrapper')) {
+        userMenu.classList.remove('show');
+    }
+    const drawer = document.getElementById('qbMobileNavDrawer');
+    if (drawer && !e.target.closest('.qb-mobile-nav-drawer') && !e.target.closest('.qb-hamburger-btn')) {
+        drawer.classList.remove('show');
+    }
+});
+</script>

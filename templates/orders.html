@@ -196,44 +196,7 @@
 </head>
 <body>
 
-    <header class="navbar">
-        <a href="/" class="logo">
-            <span>🍕</span> QuickBite
-        </a>
-        <div class="nav-links">
-            <a href="/">Home</a>
-            {% if current_user %}
-                <a href="{{ url_for('profile_page') }}">Profile</a>
-            {% endif %}
-            <a href="/orders" style="color:var(--orange);">My Orders</a>
-            <a href="/cart">Cart</a>
-            <a href="/faq">FAQ</a>
-            <a href="/help">Help</a>
-            {% if current_user %}
-                <div class="user-nav-wrapper">
-                    <button class="user-avatar-btn" onclick="toggleUserDropdown(event)">
-                        <span>{{ current_user.avatar or '👨‍💼' }}</span>
-                        <span>{{ current_user.name.split(' ')[0] }}</span>
-                        <span style="font-size:10px; color:#94a3b8;">▼</span>
-                    </button>
-                    <div id="userDropdownMenu" class="user-dropdown-menu">
-                        <div class="user-dropdown-header">
-                            <strong>{{ current_user.name }}</strong>
-                            <span>{{ current_user.email }}</span>
-                        </div>
-                        <a href="{{ url_for('profile_page') }}" class="user-dropdown-link">👤 My Profile</a>
-                        <a href="{{ url_for('orders_page') }}" class="user-dropdown-link">📦 My Orders</a>
-                        <a href="{{ url_for('cart') }}" class="user-dropdown-link">🛒 View Cart</a>
-                        <a href="{{ url_for('logout') }}" class="user-dropdown-link logout">🚪 Log Out</a>
-                    </div>
-                </div>
-            {% else %}
-                <a href="{{ url_for('login_page') }}" class="nav-signin-btn">
-                    <span>👤 Sign In</span>
-                </a>
-            {% endif %}
-        </div>
-    </header>
+    {% include 'navbar.html' %}
 
     <main class="page">
         <div class="page-header">
