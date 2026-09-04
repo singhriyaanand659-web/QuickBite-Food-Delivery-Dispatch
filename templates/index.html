@@ -1596,7 +1596,7 @@
         <article
             class="restaurant-card"
             data-name="Spice Kitchen"
-            data-food="indian biryani curry chicken biryani veg biryani paneer tikka butter chicken garlic naan north indian spices thali dal makhani"
+            data-food="indian biryani briyani curry chicken biryani chicken briyani veg biryani veg briyani paneer tikka butter chicken garlic naan north indian spices thali dal makhani"
         >
 
 
@@ -2190,6 +2190,7 @@
         const input = document.getElementById("restaurantSearch");
         if (!input) return;
         const query = input.value.toLowerCase().trim();
+        const normQuery = query.replace(/briyani/g, "biryani");
         const cards = document.querySelectorAll(".restaurant-card");
         const noResults = document.getElementById("noResultsMessage");
         const querySpan = document.getElementById("noResultsQuery");
@@ -2200,7 +2201,7 @@
             const food = (card.dataset.food || "").toLowerCase();
             const text = (card.innerText || "").toLowerCase();
 
-            if (!query || name.includes(query) || food.includes(query) || text.includes(query)) {
+            if (!query || name.includes(query) || food.includes(query) || text.includes(query) || name.includes(normQuery) || food.includes(normQuery)) {
                 card.style.display = "";
                 matches++;
             } else {
@@ -2241,6 +2242,7 @@
         });
         searchInput.addEventListener("input", function() {
             const query = searchInput.value.toLowerCase().trim();
+            const normQuery = query.replace(/briyani/g, "biryani");
             const cards = document.querySelectorAll(".restaurant-card");
             const noResults = document.getElementById("noResultsMessage");
             const querySpan = document.getElementById("noResultsQuery");
@@ -2251,7 +2253,7 @@
                 const food = (card.dataset.food || "").toLowerCase();
                 const text = (card.innerText || "").toLowerCase();
 
-                if (!query || name.includes(query) || food.includes(query) || text.includes(query)) {
+                if (!query || name.includes(query) || food.includes(query) || text.includes(query) || name.includes(normQuery) || food.includes(normQuery)) {
                     card.style.display = "";
                     matches++;
                 } else {
