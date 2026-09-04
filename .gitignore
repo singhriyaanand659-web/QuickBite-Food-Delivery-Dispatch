@@ -60,3 +60,5 @@ desktop.ini
 *.log
 scratch/
 experiments/plots/*.png
+
+.vercel

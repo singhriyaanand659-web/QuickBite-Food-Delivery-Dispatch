@@ -452,6 +452,110 @@
                             </div>
                         </div>
 
+                        <!-- PAY VIA QR -->
+                        <div class="payment-option" id="opt-qr" onclick="selectMethod('qr')">
+                            <div class="option-header">
+                                <label class="option-radio">
+                                    <input type="radio" name="payment_method" value="qr">
+                                    <span>Pay via QR (Scan UPI QR)</span>
+                                </label>
+                                <span class="option-badge" style="background:#fef3c7; color:#b45309;">INSTANT SCAN</span>
+                            </div>
+                            <div class="option-content">
+                                <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:14px; padding:22px 18px; text-align:center;">
+                                    <div style="font-size:13px; font-weight:700; color:#475569; margin-bottom:4px;">
+                                        Scan with any UPI App
+                                    </div>
+                                    <div style="font-size:11px; color:var(--muted); margin-bottom:14px;">
+                                        GPay • PhonePe • Paytm • BHIM • Cred • Mobile Banking
+                                    </div>
+
+                                    <div style="display:inline-flex; flex-direction:column; align-items:center; background:#ffffff; padding:14px; border:2px solid #0f172a; border-radius:16px; box-shadow:0 6px 20px rgba(0,0,0,0.06); margin-bottom:14px;">
+                                        <svg width="170" height="170" viewBox="0 0 170 170" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block; max-width:100%; height:auto;">
+                                            <rect width="170" height="170" fill="white"/>
+                                            <!-- Top-Left Target -->
+                                            <rect x="10" y="10" width="45" height="45" rx="6" fill="#0f172a"/>
+                                            <rect x="17" y="17" width="31" height="31" rx="3" fill="white"/>
+                                            <rect x="23" y="23" width="19" height="19" rx="2" fill="#ff5a1f"/>
+                                            <!-- Top-Right Target -->
+                                            <rect x="115" y="10" width="45" height="45" rx="6" fill="#0f172a"/>
+                                            <rect x="122" y="17" width="31" height="31" rx="3" fill="white"/>
+                                            <rect x="128" y="23" width="19" height="19" rx="2" fill="#ff5a1f"/>
+                                            <!-- Bottom-Left Target -->
+                                            <rect x="10" y="115" width="45" height="45" rx="6" fill="#0f172a"/>
+                                            <rect x="17" y="122" width="31" height="31" rx="3" fill="white"/>
+                                            <rect x="23" y="128" width="19" height="19" rx="2" fill="#ff5a1f"/>
+                                            
+                                            <!-- QR Data Matrix Pattern -->
+                                            <rect x="65" y="12" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="80" y="12" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="95" y="12" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="65" y="27" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="88" y="27" width="15" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="65" y="42" width="15" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="88" y="42" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="100" y="42" width="6" height="8" rx="1" fill="#0f172a"/>
+                                            
+                                            <rect x="12" y="65" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="27" y="65" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="42" y="65" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="12" y="80" width="15" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="35" y="80" width="15" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="12" y="95" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="27" y="95" width="23" height="8" rx="1" fill="#0f172a"/>
+                                            
+                                            <rect x="118" y="65" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="133" y="65" width="15" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="152" y="65" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="118" y="80" width="15" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="140" y="80" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="118" y="95" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="133" y="95" width="27" height="8" rx="1" fill="#0f172a"/>
+                                            
+                                            <rect x="65" y="118" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="80" y="118" width="15" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="100" y="118" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="115" y="118" width="15" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="138" y="118" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="150" y="118" width="10" height="8" rx="1" fill="#0f172a"/>
+                                            
+                                            <rect x="65" y="133" width="15" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="88" y="133" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="102" y="133" width="15" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="125" y="133" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="140" y="133" width="20" height="8" rx="1" fill="#0f172a"/>
+                                            
+                                            <rect x="65" y="148" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="80" y="148" width="20" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="108" y="148" width="8" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="122" y="148" width="18" height="8" rx="1" fill="#0f172a"/>
+                                            <rect x="148" y="148" width="12" height="8" rx="1" fill="#0f172a"/>
+                                            
+                                            <!-- Center Logo Badge -->
+                                            <rect x="62" y="62" width="46" height="46" rx="10" fill="white"/>
+                                            <rect x="66" y="66" width="38" height="38" rx="8" fill="#ff5a1f"/>
+                                            <text x="85" y="91" font-family="Arial, sans-serif" font-size="20" font-weight="900" fill="white" text-anchor="middle">⚡</text>
+                                        </svg>
+                                        <div style="font-size:11px; font-weight:800; color:#0f172a; margin-top:8px; display:flex; align-items:center; gap:5px;">
+                                            <span>UPI ID:</span> <span style="color:#ff5a1f;">quickbite.pay@upi</span>
+                                        </div>
+                                    </div>
+
+                                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:10px 16px; margin-bottom:16px; display:inline-block; min-width:220px;">
+                                        <div style="font-size:11px; color:var(--muted); font-weight:700;">AMOUNT PAYABLE</div>
+                                        <div style="font-size:22px; font-weight:900; color:#0f172a;">₹<span class="qr-payable-val">0</span></div>
+                                    </div>
+
+                                    <div>
+                                        <button type="button" class="btn-qr-success" onclick="processPayment()" style="width:100%; max-width:300px; margin:0 auto; padding:13px 20px; background:#10b981; color:white; border:none; border-radius:10px; font-size:15px; font-weight:800; cursor:pointer; transition:all 0.2s ease; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 14px rgba(16, 185, 129, 0.3);">
+                                            <span>✓ Payment Successful</span>
+                                        </button>
+                                    </div>
+                                    <div style="font-size:11px; color:var(--muted); margin-top:10px;">🔒 Scan QR code and click "Payment Successful" to confirm order.</div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- CARDS -->
                         <div class="payment-option" id="opt-card" onclick="selectMethod('card')">
                             <div class="option-header">
@@ -627,6 +731,7 @@
             document.getElementById('subtotalVal').innerText = subtotal;
             document.getElementById('totalPayable').innerText = total;
             document.getElementById('btnAmount').innerText = total;
+            document.querySelectorAll('.qr-payable-val').forEach(el => el.innerText = total);
 
             document.getElementById('deliverName').innerText = checkoutInfo.customer_name || "Guest Customer";
             document.getElementById('deliverAddress').innerText = checkoutInfo.address || "Mumbai";
@@ -653,6 +758,8 @@
                 btn.innerHTML = `<span>Place Order with Cash on Delivery (₹${total}) 💵</span>`;
             } else if (currentMethod === 'upi') {
                 btn.innerHTML = `<span>Verify & Pay ₹${total} via UPI ⚡</span>`;
+            } else if (currentMethod === 'qr') {
+                btn.innerHTML = `<span>Payment Successful (₹${total} via QR) ✓</span>`;
             } else {
                 btn.innerHTML = `<span>Pay ₹${total} Securely with Card 💳</span>`;
             }
@@ -675,6 +782,8 @@
                     return;
                 }
                 paymentDetails = `UPI ID: ${upiVal}`;
+            } else if (currentMethod === 'qr') {
+                paymentDetails = "UPI QR Scan: quickbite.pay@upi (Verified)";
             } else if (currentMethod === 'card') {
                 const cardNum = document.getElementById('cardNumber').value.replace(/\s+/g, '');
                 const cardHolder = document.getElementById('cardHolder').value.trim();

@@ -974,7 +974,7 @@ def cancel_order_api():
     payment_method = order.get("payment_method", "upi").lower()
     refund_record = None
 
-    if payment_method in ["upi", "card"]:
+    if payment_method in ["upi", "card", "qr"]:
         refund_id = f"REF-{random.randint(10000, 99999)}"
         dest = order.get("payment_details", "Original payment source")
         refund_record = {
