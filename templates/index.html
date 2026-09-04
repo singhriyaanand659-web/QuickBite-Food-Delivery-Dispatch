@@ -1596,7 +1596,7 @@
         <article
             class="restaurant-card"
             data-name="Spice Kitchen"
-            data-food="indian biryani curry"
+            data-food="indian biryani curry chicken biryani veg biryani paneer tikka butter chicken garlic naan north indian spices thali dal makhani"
         >
 
 
@@ -1680,7 +1680,7 @@
         <article
             class="restaurant-card"
             data-name="Burger House"
-            data-food="burger fries american"
+            data-food="burger burgers fries american classic cheese burger crispy chicken burger loaded fries veggie supreme burger milkshakes onion rings fast food patties"
         >
 
 
@@ -1764,7 +1764,7 @@
         <article
             class="restaurant-card"
             data-name="Pizza Point"
-            data-food="pizza italian pasta"
+            data-food="pizza pizzas italian pasta margherita pizza pepperoni pizza farm fresh pizza garlic bread pasta arrabbiata cheese burst sourdough crust"
         >
 
 
@@ -1840,6 +1840,14 @@
 
 
         </article>
+
+        <!-- NO RESULTS MESSAGE -->
+        <div id="noResultsMessage" style="display: none; grid-column: 1 / -1; text-align: center; padding: 48px 20px; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin: 10px 0;">
+            <div style="font-size: 40px; margin-bottom: 10px;">🍽️</div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">No results found</h3>
+            <p style="font-size: 14px; color: #64748b; margin-bottom: 16px;">We couldn't find any restaurants or dishes matching "<span id="noResultsQuery" style="font-weight: 700; color: #ff5a1f;"></span>".</p>
+            <button type="button" onclick="clearSearch()" style="background: #ff5a1f; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s ease;">Show All Restaurants</button>
+        </div>
 
 
 
@@ -2178,87 +2186,101 @@
 ========================================================= -->
 
 <script>
-
-
     function searchRestaurants() {
+        const input = document.getElementById("restaurantSearch");
+        if (!input) return;
+        const query = input.value.toLowerCase().trim();
+        const cards = document.querySelectorAll(".restaurant-card");
+        const noResults = document.getElementById("noResultsMessage");
+        const querySpan = document.getElementById("noResultsQuery");
+        let matches = 0;
 
-        const input =
-            document.getElementById(
-                "restaurantSearch"
-            );
+        cards.forEach(function(card) {
+            const name = (card.dataset.name || "").toLowerCase();
+            const food = (card.dataset.food || "").toLowerCase();
+            const text = (card.innerText || "").toLowerCase();
 
-        const query =
-            input.value
-                .toLowerCase()
-                .trim();
-
-
-        const cards =
-            document.querySelectorAll(
-                ".restaurant-card"
-            );
-
-
-        cards.forEach(
-            function(card) {
-
-                const name =
-                    (
-                        card.dataset.name
-                        || ""
-                    ).toLowerCase();
-
-
-                const food =
-                    (
-                        card.dataset.food
-                        || ""
-                    ).toLowerCase();
-
-
-                if (
-                    !query
-                    ||
-                    name.includes(query)
-                    ||
-                    food.includes(query)
-                ) {
-
-                    card.style.display =
-                        "block";
-
-                } else {
-
-                    card.style.display =
-                        "none";
-
-                }
-
+            if (!query || name.includes(query) || food.includes(query) || text.includes(query)) {
+                card.style.display = "";
+                matches++;
+            } else {
+                card.style.display = "none";
             }
-        );
+        });
 
+        if (noResults) {
+            if (matches === 0 && query !== "") {
+                if (querySpan) querySpan.innerText = input.value.trim();
+                noResults.style.display = "block";
+            } else {
+                noResults.style.display = "none";
+            }
+        }
+
+        const restaurantSection = document.getElementById("restaurants");
+        if (restaurantSection && query !== "") {
+            restaurantSection.scrollIntoView({ behavior: "smooth" });
+        }
     }
 
+    function clearSearch() {
+        const input = document.getElementById("restaurantSearch");
+        if (input) {
+            input.value = "";
+        }
+        searchRestaurants();
+    }
 
-
-    document
-        .getElementById(
-            "restaurantSearch"
-        )
-        .addEventListener(
-            "keydown",
-            function(event) {
-
-                if (
-                    event.key === "Enter"
-                ) {
-
-                    searchRestaurants();
-
-                }
-
+    const searchInput = document.getElementById("restaurantSearch");
+    if (searchInput) {
+        searchInput.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                searchRestaurants();
             }
-        );
+        });
+        searchInput.addEventListener("input", function() {
+            const query = searchInput.value.toLowerCase().trim();
+            const cards = document.querySelectorAll(".restaurant-card");
+            const noResults = document.getElementById("noResultsMessage");
+            const querySpan = document.getElementById("noResultsQuery");
+            let matches = 0;
+
+            cards.forEach(function(card) {
+                const name = (card.dataset.name || "").toLowerCase();
+                const food = (card.dataset.food || "").toLowerCase();
+                const text = (card.innerText || "").toLowerCase();
+
+                if (!query || name.includes(query) || food.includes(query) || text.includes(query)) {
+                    card.style.display = "";
+                    matches++;
+                } else {
+                    card.style.display = "none";
+                }
+            });
+
+            if (noResults) {
+                if (matches === 0 && query !== "") {
+                    if (querySpan) querySpan.innerText = searchInput.value.trim();
+                    noResults.style.display = "block";
+                } else {
+                    noResults.style.display = "none";
+                }
+            }
+        });
+    }
+
+    // Category pills filter
+    document.querySelectorAll(".category").forEach(function(cat) {
+        cat.addEventListener("click", function(e) {
+            e.preventDefault();
+            const categoryName = (cat.querySelector("span")?.innerText || "").trim();
+            if (categoryName && searchInput) {
+                searchInput.value = categoryName;
+                searchRestaurants();
+            }
+        });
+    });
 
 
     function toggleUserDropdown(e) {
