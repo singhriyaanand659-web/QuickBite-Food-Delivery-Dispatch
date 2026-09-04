@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session, send_from_directory
 import heapq
 import os
 import random
@@ -37,13 +37,18 @@ from simulation import (
 )
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static", template_folder="templates")
 app.secret_key = os.environ.get("SECRET_KEY", "quickbite-secure-session-key-2026-auth")
 app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_COOKIE_NAME"] = "quickbite_session"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.permanent_session_lifetime = timedelta(days=30)
+
+
+@app.route("/static/<path:filename>")
+def serve_static(filename):
+    return send_from_directory(os.path.join(app.root_path, "static"), filename)
 
 # ============================================================
 # CONFIGURATION & GLOBAL CONTEXT
